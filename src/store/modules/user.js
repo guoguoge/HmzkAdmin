@@ -4,12 +4,12 @@ import {
 } from '@/api/login'
 
 import {
-  Login,
+  Login
 } from '@/api/beesbit'
 
 import {
   Message
-} from 'element-ui';
+} from 'element-ui'
 
 import {
   getToken,
@@ -67,12 +67,12 @@ const user = {
       const username = userInfo.username.trim()
       return new Promise((resolve, reject) => {
         Login(username, userInfo.password).then(response => {
-          console.log(response.data);
+          console.log(response.data)
           const data = jsonpReturn(response.data).msg
           if (jsonpReturn(response.data).status == 1) {
             commit('SET_TOKEN', data.token) // 存入token
-            setToken(data) //存入的是新的必势得的token
-            console.log(getToken());
+            setToken(data) // 存入的是新的必势得的token
+            console.log(getToken())
             Message({
               message: '欢迎来到必势得后台管理系统',
               type: 'success',
@@ -105,7 +105,7 @@ const user = {
           }
 
           const data = response.data
-          console.log(data.roles);
+          console.log(data.roles)
           if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
             commit('SET_ROLES', data.roles)
           } else {
@@ -117,7 +117,6 @@ const user = {
         })
       })
     },
-
 
     // 登出
     LogOut({

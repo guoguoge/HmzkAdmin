@@ -1,15 +1,8 @@
 <template>
 <div>
-  <el-button
-    title="修改"
-    size="mini"
-    type="success"
-    @click="params.context.componentParent.operationEdit(params.data,params.rowIndex)">
-    修改
-  </el-button>
   <el-popover
     placement="top-start"
-    title="确定删除?"
+    :title="params.data.is_allow?'确定封号':'确定解封'"
     width="180"
     trigger="click"
     v-model="visible"
@@ -24,7 +17,7 @@
       size="mini"
       type="danger"
       @click="visible = true">
-      删除
+     {{params.data.is_allow == 1?'封号':'解封'}}
     </el-button>
   </el-popover>
 </div>

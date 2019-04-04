@@ -18,7 +18,7 @@ export default {
     notice: '公告列表',
     edit: '编辑公告',
     user: '用户详情',
-    userinfo: '用户数据信息',
+    userinfo: '用户列表',
     userdata: '用户数据统计',
     setting: '基础设置',
     combo: '套餐设定',

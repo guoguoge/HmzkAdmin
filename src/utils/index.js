@@ -7,12 +7,11 @@ import Store from '../store'
 import router from '../router'
 const TokenKey = 'Admin-Token'
 
-
 import {
   Message
-} from 'element-ui';
+} from 'element-ui'
 
-export const jsonpReturn = (data) => { //处理jsonpReturn格式对象
+export const jsonpReturn = (data) => { // 处理jsonpReturn格式对象
   if (data.status == 2) {
     Store.dispatch('LogOut').then(res => {
       Message({
@@ -33,20 +32,20 @@ export const jsonpReturn = (data) => { //处理jsonpReturn格式对象
 }
 
 export const checkRequest = (res, usemsg) => {
-  let data = jsonpReturn(res.data)
-  let msg = data.msg
-  let status = data.status
+  const data = jsonpReturn(res.data)
+  const msg = data.msg
+  const status = data.status
   if (usemsg) {
     if (status == 1) {
       Message({
-        message: ((typeof msg) != 'string') ? '成功' : msg,
+        message: ((typeof msg) !== 'string') ? '成功' : msg,
         type: 'success',
         showClose: true
       })
       return msg
     } else {
       Message({
-        message: ((typeof msg) != 'string') ? '失败' : msg,
+        message: ((typeof msg) !== 'string') ? '失败' : msg,
         type: 'error',
         showClose: true
       })
@@ -62,25 +61,25 @@ export const checkRequest = (res, usemsg) => {
 }
 
 export const getRole = () => {
-  let role = JSON.parse(Cookies.get(TokenKey)).permission
-  console.log(role);
+  const role = JSON.parse(Cookies.get(TokenKey)).permission
+  console.log(role)
   let x
   switch (Number(role)) {
     case 1:
-      x = "超级管理员"
-      return x;
+      x = '超级管理员'
+      return x
       break
     case 2:
-      return "出纳管理员";
+      return '出纳管理员'
       break
     case 3:
-      return "会计管理员";
+      return '会计管理员'
       break
     case 9:
-      return "已购代理商";
+      return '已购代理商'
       break
     case 10:
-      return "普通代理商";
+      return '普通代理商'
       break
   }
 }
@@ -93,7 +92,6 @@ export const ArrayRemove = (arr, item) => { // 从数组中移除特定元素
   }
   return arr
 }
-
 
 export function parseTime(time, cFormat) {
   if (arguments.length === 0) {
@@ -169,16 +167,15 @@ export function formatTime(time, option) {
   }
 }
 
-
 export function formatDate(time) {
-  var date = new Date(time * 1000); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
-  var Y = date.getFullYear() + '-';
-  var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
-  var D = date.getDate() < 10 ? '0' + date.getDate() + ' ' : date.getDate() + ' ';
-  var h = date.getHours() < 10 ? '0' + date.getHours() + ':' : date.getHours() + ':';
-  var m = date.getMinutes() < 10 ? '0' + date.getMinutes() + ':' : date.getMinutes() + ':';
-  var s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
-  return Y + M + D + h + m + s;
+  var date = new Date(time * 1000) // 时间戳为10位需*1000，时间戳为13位的话不需乘1000
+  var Y = date.getFullYear() + '-'
+  var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
+  var D = date.getDate() < 10 ? '0' + date.getDate() + ' ' : date.getDate() + ' '
+  var h = date.getHours() < 10 ? '0' + date.getHours() + ':' : date.getHours() + ':'
+  var m = date.getMinutes() < 10 ? '0' + date.getMinutes() + ':' : date.getMinutes() + ':'
+  var s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()
+  return Y + M + D + h + m + s
 }
 
 // 格式化时间
@@ -242,9 +239,9 @@ export function param2Obj(url) {
   return JSON.parse(
     '{"' +
     decodeURIComponent(search)
-    .replace(/"/g, '\\"')
-    .replace(/&/g, '","')
-    .replace(/=/g, '":"') +
+      .replace(/"/g, '\\"')
+      .replace(/&/g, '","')
+      .replace(/=/g, '":"') +
     '"}'
   )
 }
@@ -293,41 +290,41 @@ export function toggleClass(element, className) {
 }
 
 export const pickerOptions = [{
-    text: '今天',
-    onClick(picker) {
-      const end = new Date()
-      const start = new Date(new Date().toDateString())
-      end.setTime(start.getTime())
-      picker.$emit('pick', [start, end])
-    }
-  },
-  {
-    text: '最近一周',
-    onClick(picker) {
-      const end = new Date(new Date().toDateString())
-      const start = new Date()
-      start.setTime(end.getTime() - 3600 * 1000 * 24 * 7)
-      picker.$emit('pick', [start, end])
-    }
-  },
-  {
-    text: '最近一个月',
-    onClick(picker) {
-      const end = new Date(new Date().toDateString())
-      const start = new Date()
-      start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
-      picker.$emit('pick', [start, end])
-    }
-  },
-  {
-    text: '最近三个月',
-    onClick(picker) {
-      const end = new Date(new Date().toDateString())
-      const start = new Date()
-      start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
-      picker.$emit('pick', [start, end])
-    }
+  text: '今天',
+  onClick(picker) {
+    const end = new Date()
+    const start = new Date(new Date().toDateString())
+    end.setTime(start.getTime())
+    picker.$emit('pick', [start, end])
   }
+},
+{
+  text: '最近一周',
+  onClick(picker) {
+    const end = new Date(new Date().toDateString())
+    const start = new Date()
+    start.setTime(end.getTime() - 3600 * 1000 * 24 * 7)
+    picker.$emit('pick', [start, end])
+  }
+},
+{
+  text: '最近一个月',
+  onClick(picker) {
+    const end = new Date(new Date().toDateString())
+    const start = new Date()
+    start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+    picker.$emit('pick', [start, end])
+  }
+},
+{
+  text: '最近三个月',
+  onClick(picker) {
+    const end = new Date(new Date().toDateString())
+    const start = new Date()
+    start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+    picker.$emit('pick', [start, end])
+  }
+}
 ]
 
 export function getTime(type) {

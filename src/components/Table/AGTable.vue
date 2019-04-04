@@ -300,7 +300,9 @@ export default {
 }
 
 .colorDiv {
-    background: linear-gradient(90deg,rgba(255,124,42,1) 0%,rgba(255,144,51,1) 20%,rgba(255,170,62,1) 50%,rgba(255,185,69,1) 78%,rgba(255,191,72,1) 100%);
+  background: #B2FEFA;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #0ED2F7, #B2FEFA);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #0ED2F7, #B2FEFA); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     height: 6px;
 }
 

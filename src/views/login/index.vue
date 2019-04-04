@@ -1,31 +1,31 @@
 <template>
-<div class="login-container">
-  <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="top" status-icon>
-    <div class="logo-container">
-      <img src="../../assets/logo.png" width="100%">
-    </div>
+  <div class="login-container">
+    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="top" status-icon>
+      <div class="logo-container">
+        <img src="../../assets/logo.png" width="100%">
+      </div>
 
-    <div class="title-container">
-      <h3 class="title">
-        {{ $t('login.title') }}
-      </h3>
-    </div>
+      <div class="title-container">
+        <h3 class="title">
+          {{ $t('login.title') }}
+        </h3>
+      </div>
 
-    <el-form-item prop="username" label="管理员账号">
-      <el-input size="large" v-model="loginForm.username" :placeholder="$t('login.username')" name="username" type="text" auto-complete="on" />
-    </el-form-item>
+      <el-form-item prop="username" label="管理员账号">
+        <el-input v-model="loginForm.username" :placeholder="$t('login.username')" size="large" name="username" type="text" auto-complete="on" />
+      </el-form-item>
 
-    <el-form-item prop="password" label="账号密码">
-      <el-input size="large" v-model="loginForm.password" :type="passwordType" :placeholder="$t('login.password')" name="password" auto-complete="on" @keyup.enter.native="handleLogin" />
-    </el-form-item>
+      <el-form-item prop="password" label="账号密码">
+        <el-input v-model="loginForm.password" :type="passwordType" :placeholder="$t('login.password')" size="large" name="password" auto-complete="on" @keyup.enter.native="handleLogin" />
+      </el-form-item>
 
-    <el-button class="beesbit-btn" size="large" :loading="loading" type="primary" style="width:100%;margin-top:30px;" @click.native.prevent="handleLogin">
-      {{ $t('login.logIn') }}
-    </el-button>
+      <el-button :loading="loading" class="beesbit-btn" size="large" type="primary" style="width:100%;margin-top:30px;" @click.native.prevent="handleLogin">
+        {{ $t('login.logIn') }}
+      </el-button>
 
-  </el-form>
+    </el-form>
 
-</div>
+  </div>
 </template>
 
 <script>
@@ -91,7 +91,7 @@ export default {
     // window.removeEventListener('hashchange', this.afterQRScan)
   },
   mounted() {
-    let lang = 'zh'
+    const lang = 'zh'
     this.$i18n.locale = lang
     this.$store.dispatch('setLanguage', lang)
   },
@@ -110,9 +110,9 @@ export default {
           this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
             this.loading = false
             this.$router.push({
-              path:'/'
+              path: '/'
             })
-            console.log(12321);
+            console.log(12321)
           }).catch(() => {
             this.loading = false
           })

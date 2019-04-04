@@ -17,20 +17,20 @@ import {
 } from 'vuex'
 
 import {
-  StatisticUser
+  StatisticUser,
+  FreezeUser
 } from '@/api/beesbit'
 export default {
   data() {
     return {
       rowData: [], //表格源数据
-      column: [
-        {
-          headerName: '用户姓名',
+      column: [{
+          headerName: '用户昵称',
           field: 'name',
           cellStyle: {
             color: '#8D8D8D'
           },
-          width:150
+          width: 150
         },
         {
           headerName: '用户电话',
@@ -47,67 +47,35 @@ export default {
           },
         },
         {
-          headerName: '已花费金额（元）',
-          field: 'price',
+          headerName: '用户状态',
+          field: 'is_allow',
           cellStyle: {
             color: '#8D8D8D'
           },
+          cellRenderer: params => {
+            return params.data.is_allow == 1 ? '正常' : '封号';
+          },
+          valueGetter: params => {
+            return params.data.is_allow == 1 ? '正常' : '封号';
+          }
         },
         {
-          headerName: '当前运行算力',
-          field: 'power',
+          headerName: '账户余额',
+          field: 'balance',
           cellStyle: {
             color: '#8D8D8D'
           },
+          cellRendererFramework: 'statusButton',
+          pinned: 'right',
+
         },
-        {
-          headerName: '预计累积赚取（元）',
-          field: 'power',
-          cellStyle: {
-            color: '#8D8D8D'
-          },
-        },
-        {
-          headerName: '已产生收益（ETH）',
-          field: 'income',
-          cellStyle: {
-            color: '#8D8D8D'
-          },
-        },
-        {
-          headerName: '已提现量（ETH）',
-          field: 'payout',
-          cellStyle: {
-            color: '#8D8D8D'
-          },
-        },
-        {
-          headerName: '邀请人',
-          field: 'age',
-          cellStyle: {
-            color: '#8D8D8D'
-          },
-        },
-        {
-          headerName: 'ETH奖励量',
-          field: 'income',
-          cellStyle: {
-            color: '#8D8D8D'
-          },
-        },
-        {
-          headerName: '代理商来源',
-          field: 'agent_name',
-          cellStyle: {
-            color: '#8D8D8D'
-          },
-        }
       ],
       config: {
         width: 180,
         sortable: true,
         resizable: true,
-        filter: true,search: true,
+        filter: true,
+        search: true,
       },
       rowContent: {},
       show: false
@@ -124,8 +92,8 @@ export default {
   methods: {
     init() {
       StatisticUser(this.token).then(res => {
+        console.log(checkRequest(res, false));
         this.rowData = checkRequest(res, false)
-        console.log(this.rowData);
       })
     },
     operationEdit(row, index) {
@@ -134,8 +102,13 @@ export default {
       console.log(row, index)
     },
     operationDelete(row, index) {
-      console.log(row, index)
-      console.log(this.rowData.splice(index, 1));
+      let allow = row.is_allow == 1 ? 2 : 1
+      FreezeUser(this.token, row.id, allow).then(res => {
+        if (checkRequest(res, true)) {
+          this.rowData = checkRequest(res, false)
+          this.init()
+        }
+      })
     }
   },
   created() {
