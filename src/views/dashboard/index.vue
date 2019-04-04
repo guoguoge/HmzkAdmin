@@ -1,17 +1,113 @@
 <template>
 <div class="app-container">
-  <!--     <component :is="currentRole"/> -->
-  订单总览
-  <el-row :gutter="20">
-    <el-col :span="6" v-for="(item,index) in totalList" :key="index">
-      <dataBox :index="index + 1" :res="item"></dataBox>
+  <el-row type="flex" justify="end">
+    <el-col :span="4" style="text-align:right;marginBottom:1rem">
+      <el-button type="primary" @click="showDialog(1)"><i class="el-icon-circle-plus"></i> 新增夺宝商品</el-button>
     </el-col>
   </el-row>
-  <earningBox :webData="webData"></earningBox>
+  <AGTable :rowData="rowData" :columnDefs="column" :defaultColDef="config" @operationDelete="operationDelete" @operationEdit="operationEdit"></AGTable>
+  <el-dialog :visible.sync="show" :title="title" width="50%" center>
+    <span slot="footer" class="dialog-footer">
+      <el-form status-icon ref="form" :rules="rules" :model="form" label-position="left" class="demo-ruleForm">
+        <el-row type="flex" justify="space-between" :gutter="20">
+          <el-col>
+            <el-form-item style="width:100%" label="商品名称" prop="name">
+              <el-input placeholder="请输入管理账号" v-model="form.name" autocomplete="off"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item style="width:100%" label="商品分类" prop="category">
+              <el-select style="width:100%" v-model="form.category" placeholder="商品分类">
+                <el-option v-for="(item,index) in categoryList" :key="item.value" :label="item.label" :value="item.value" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item style="width:100%" label="参与价格" prop="price">
+              <el-input placeholder="请输入参与价格" v-model="form.price" autocomplete="off"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row type="flex" justify="space-between" :gutter="20">
+          <el-col>
+            <el-form-item label="马甲中奖id(非必填)" prop="vest_user">
+              <el-input placeholder="马甲中奖id" v-model="form.vest_user" autocomplete="off"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item label="基础人气(非必填)" prop="popular">
+              <el-input placeholder="基础人气" v-model="form.popular" autocomplete="off"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row type="flex" justify="space-between" :gutter="20">
+          <el-col>
+            <el-form-item style="width:100%" label="开始时间" prop="start">
+              <el-date-picker value-format="timestamp" style="width:100%" format="yyyy-MM-ddHH:mm:ss" :picker-options="pickerOptions" v-model="form.start" type="datetime" placeholder="选择开始时间">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item style="width:100%" label="结束时间(需选择开始时间)" prop="end">
+              <el-date-picker value-format="timestamp" :disabled="!form.start" style="width:100%" format="yyyy-MM-ddHH:mm:ss" :picker-options="pickerOptions1" v-model="form.end" type="datetime" placeholder="选择结束时间">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-form-item label="" prop="age">
+          <div class="">
+            <el-switch style="margin:1rem 0" v-model="form.status" :active-value="1" :inactive-value="2" active-color="#13ce66" inactive-color="#ff4949" active-text="上架" inactive-text="下架">
+            </el-switch>
+          </div>
+        </el-form-item>
+
+
+        <el-form-item label="" prop="age">
+          <el-upload
+            class="upload-demo"
+            action="#"
+            :multiple="false"
+            :limit="1"
+            :before-upload="handleUpload"
+            :on-preview="handlePreview"
+            :on-remove="handleRemove"
+            :file-list="fileList"
+            list-type="picture">
+            <el-button size="small" type="primary">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">封面图</div>
+          </el-upload>
+        </el-form-item>
+
+        <el-form-item label="" prop="age">
+          <el-upload
+            class="upload-demo"
+            action="#"
+            :before-upload="handleUpload2"
+            :on-preview="handlePreview2"
+            :on-remove="handleRemove2"
+            :file-list="fileList2"
+            list-type="picture">
+            <el-button size="small" type="primary">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">详情图</div>
+          </el-upload>
+        </el-form-item>
+
+
+      </el-form>
+      <el-button size="large" style="width:100%;" type="primary" @click="submit">确 定</el-button>
+    </span>
+  </el-dialog>
+
+  <el-dialog :visible.sync="dialogVisible">
+    <img width="100%" :src="dialogImageUrl" alt="">
+  </el-dialog>
 </div>
 </template>
 
 <script>
+import AGTable from '@/components/Table/AGTable'
+
 import {
   jsonpReturn,
   checkRequest
@@ -22,27 +118,196 @@ import {
 } from 'vuex'
 
 import {
-  StatisticWeb
+  Category,
+  AddTreasure,
+  EditTreasure,
+  DelCategory,
+  ListTreasure,
+  DelTreasure
 } from '@/api/beesbit'
 
-import adminDashboard from './admin'
-import editorDashboard from './editor'
-import dataBox from './admin/components/dataBox'
-import earningBox from './admin/components/earningBox'
-
 export default {
-  name: 'Dashboard',
-  components: {
-    adminDashboard,
-    editorDashboard,
-    dataBox,
-    earningBox
-  },
   data() {
     return {
-      currentRole: 'adminDashboard',
-      webData: {},
-      totalList: []
+      rowData: [], //表格源数据
+      column: [{
+          headerName: '商品名',
+          field: 'name',
+          cellStyle: {
+            color: '#8D8D8D'
+          }
+        },
+        {
+          headerName: '分类名',
+          field: 'cat_name',
+          cellStyle: {
+            color: '#8D8D8D'
+          }
+        },
+        {
+          headerName: '参与价格',
+          field: 'price',
+          cellStyle: {
+            color: '#8D8D8D'
+          }
+        },
+        {
+          headerName: '封面图',
+          field: 'cat_name',
+          cellStyle: {
+            color: '#8D8D8D'
+          }
+        },
+        {
+          headerName: '详情图',
+          field: 'cat_name',
+          cellStyle: {
+            color: '#8D8D8D'
+          }
+        },
+        {
+          headerName: '马甲中奖id',
+          field: 'vest_user',
+          cellStyle: {
+            color: '#8D8D8D'
+          },
+          cellRenderer: params => {
+            return params.data.vest_user || '暂无';
+          },
+          valueGetter: params => {
+            return params.data.vest_user || '暂无';
+          }
+        },
+        {
+          headerName: '马甲中奖昵称',
+          field: 'vest_name',
+          cellStyle: {
+            color: '#8D8D8D'
+          }
+        },
+        {
+          headerName: '人气',
+          field: 'popular',
+          cellStyle: {
+            color: '#8D8D8D'
+          }
+        },
+        {
+          headerName: '开始时间',
+          field: 'start',
+          cellStyle: {
+            color: '#8D8D8D'
+          }
+        },
+        {
+          headerName: '结束时间',
+          field: 'end',
+          cellStyle: {
+            color: '#8D8D8D'
+          }
+        },
+        {
+          headerName: '运行',
+          field: 'status',
+          cellStyle: {
+            color: '#8D8D8D'
+          },
+          cellRenderer: params => {
+            return params.data.status == 1 ? '上架' : '下架';
+          },
+          valueGetter: params => {
+            return params.data.status == 1 ? '上架' : '下架';
+          }
+        },
+        {
+          headerName: '操作',
+          field: '',
+          cellRendererFramework: 'agentOperationButton',
+          cellStyle: {
+            color: '#8D8D8D'
+          },
+          pinned: 'right',
+        }
+      ],
+      config: {
+        width: 150,
+        sortable: true,
+        resizable: true,
+        filter: true,
+        search: true,
+      },
+      pickerOptions: {
+        disabledDate: (time) => {
+          if (this.form.end != "") {
+            return time.getTime() < Date.now() || time.getTime() < this.form.end;
+          } else {
+            return time.getTime() < Date.now();
+          }
+        }
+      },
+      pickerOptions1: {
+        disabledDate: (time) => {
+          return time.getTime() < this.form.start;
+        }
+      },
+      rowContent: {},
+      show: false,
+      form: {
+        category: '1',
+        name: '',
+        price: '',
+        vest_user: '',
+        popular: '',
+        start: '',
+        end: '',
+        status: '1',
+        cover_img: '',
+        detail_img: ''
+      },
+      rules: {
+        category: [{
+          type: 'number',
+          required: true,
+          message: '请输入商品所属分类',
+          trigger: 'blur'
+        }],
+        price: [{
+          type: 'string',
+          required: true,
+          message: '请输入参与价格',
+          trigger: 'blur'
+        }],
+        vest_user: [{
+          type: 'string',
+          message: '请输入马甲中奖id',
+          trigger: 'blur'
+        }],
+        popular: [{
+          type: 'string',
+          message: '基础人气',
+          trigger: 'blur'
+        }],
+        start: [{
+          type: 'date',
+          required: true,
+          message: '请输入开始时间',
+          trigger: 'blur'
+        }],
+        end: [{
+          type: 'date',
+          required: true,
+          message: '请输入结束时间',
+          trigger: 'blur'
+        }]
+      },
+      title: '',
+      cateId: '',
+      categoryList: [],
+      dialogImageUrl: '',
+      dialogVisible: false,
+      fileList:[],
+      fileList2:[],
+      num:''
     }
   },
   computed: {
@@ -50,19 +315,165 @@ export default {
       'token'
     ])
   },
+  components: {
+    AGTable
+  },
   methods: {
     init() {
-      StatisticWeb(this.token).then(res => {
-        this.webData = checkRequest(res, false)
-        console.log(this.webData);
-        this.totalList = [{
-          power: this.webData.total_power_2,
-          price: this.webData.total_price_2,
-        }, {
-          power: this.webData.total_power_3,
-          price: this.webData.total_price_3,
-        }]
+      ListTreasure(this.token, 4).then(res => {
+        this.rowData = checkRequest(res, false)
+        console.log(this.rowData);
       })
+      Category(this.token, 4).then(res => {
+        let data = checkRequest(res, false)
+        data.forEach((item) => {
+          this.categoryList.push({
+            value: item.id,
+            label: item.cat_name
+          })
+        })
+        this.form.category = this.categoryList[0].value
+        console.log(checkRequest(res, false));
+        console.log(typeof this.categoryList[0].value);
+      })
+
+    },
+    operationEdit(row, index) {
+      this.cateId = row.id
+      this.num = 2
+      this.show = true
+      this.title = '修改夺宝商品'
+
+      this.form.category = row.category
+      this.form.name = row.name
+      this.form.price = row.price
+      this.form.vest_user = row.vest_user
+      this.form.popular = row.popular
+      this.form.start = row.start * 1000
+      this.form.end = row.end * 1000
+      this.form.status = row.status
+    },
+    operationDelete(row, index) {
+      DelTreasure(
+        this.token,
+        2,
+        row.id).then(res => {
+        if (checkRequest(res, true)) {
+          this.show = false
+          this.init()
+        }
+      })
+    },
+    upload(file) {
+      console.log(file);
+      this.img = file
+      let img = this.$refs.img
+      let freader = new FileReader();
+      freader.readAsDataURL(file);
+      freader.onload = function(e) {
+        console.log(e);
+        img.setAttribute('src', e.target.result);
+      }
+    },
+    handleRemove(file, fileList) {
+            console.log(file, fileList);
+          },
+    handlePreview(file) {
+      console.log(file);
+    },
+    handleUpload(file) {
+      console.log(file);
+      this.file = file;
+      this.fileList.push(file)
+      return false
+    },
+    handleRemove2(file, fileList) {
+      console.log(file, fileList);
+    },
+    handlePreview2(file) {
+      console.log(file);
+    },
+    handleUpload2(file) {
+      console.log(file);
+      this.fileList2.push(file)
+      return false
+    },
+    clear() {
+      this.form = {
+        cat_name: '',
+        belong: '1',
+        cat_status: ''
+      }
+    },
+    showDialog(num) {
+      this.clear()
+      this.show = true
+      if (num == 1) {
+        this.num =1
+        this.title = '新建夺宝商品'
+      }
+    },
+    submit() {
+      console.log(this.form);
+      console.log(this.file);
+      console.log(this.fileList2);
+      console.log(this.num);
+      this.$refs['form'].validate((valid) => {
+        if (valid) {
+
+        } else {
+          this.$message({
+            message: '请按要求填写表单',
+            type: 'warning'
+          })
+        }
+      })
+      let FD = new FormData()
+
+      FD.append('token',this.token)
+      FD.append('method',1)
+      FD.append('name',this.form.name)
+      FD.append('category',this.form.category)
+      FD.append('price',this.form.price)
+      FD.append('vest_user',this.form.vest_user)
+      FD.append('popular',this.form.popular)
+      FD.append('start',this.form.start/1000)
+      FD.append('end',this.form.end/1000)
+      FD.append('status',this.form.status)
+      FD.append('cover_img',this.file)
+      this.fileList2.forEach((item,index)=>{
+        FD.append('detail_img' + index,item)
+      })
+      if (this.form.name) {
+        if (this.num == 1) {
+          AddTreasure(FD).then(res => {
+            if (checkRequest(res, false)) {
+              this.rowData = checkRequest(res, false)
+              this.$refs['form'].resetFields();
+              this.file = ''
+              this.fileList2 = ''
+              this.init()
+              this.show = false
+            }
+          })
+        } else {
+          EditTreasure(FD).then(res => {
+            if (checkRequest(res, false)) {
+              this.rowData = checkRequest(res, false)
+              this.$refs['form'].resetFields();
+              this.file = ''
+              this.fileList2 = ''
+              this.init()
+              this.show = false
+            }
+          })
+        }
+      } else {
+        this.$message({
+          message: '请确认分类名已填写',
+          type: 'error'
+        })
+      }
     }
   },
   created() {
@@ -72,3 +483,6 @@ export default {
   mounted() {}
 }
 </script>
+
+<style rel="stylesheet/scss" lang="scss" scoped>
+</style>

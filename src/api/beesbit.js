@@ -115,6 +115,49 @@ export const DelCategory = (token, method, id) => {
   })
 }
 
+export const ListTreasure = (token, method) => {
+  // 代理商管理员列表
+  return request({
+    url: 'treasure',
+    method: 'post',
+    data: {
+      token: token,
+      method: method,
+    }
+  })
+}
+
+export const AddTreasure = (fd) => {
+  // 代理商管理员列表
+  return request({
+    url: 'treasure',
+    method: 'post',
+    data: fd
+  })
+}
+
+export const EditTreasure = (fd) => {
+  // 代理商管理员列表
+  return request({
+    url: 'treasure',
+    method: 'post',
+    data: fd
+  })
+}
+
+export const DelTreasure = (token, method, id) => {
+  // 代理商管理员列表
+  return request({
+    url: 'treasure',
+    method: 'post',
+    data: {
+      token: token,
+      method: method,
+      id: id
+    }
+  })
+}
+
 export const AgentChangeStatus = (token, is_allow, agent_id) => {
   // 代理商管理员列表
   return request({

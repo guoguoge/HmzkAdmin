@@ -8,7 +8,7 @@
             <h2>
               <count-to :start-val="0" :end-val="webData.total_income" :decimals="6" :duration="1000" />
             </h2>
-            <p>必势得用户总收益</p>
+            <p>惠民折扣用户总收益</p>
           </div>
         </el-col>
         <el-col style="margin-bottom:1rem;" :span="12">
@@ -16,7 +16,7 @@
             <h2>
               <count-to :start-val="0" :end-val="webData.total_payout" :decimals="6" :duration="1000" />
             </h2>
-            <p>必势得用户总提现</p>
+            <p>惠民折扣用户总提现</p>
           </div>
         </el-col>
         <el-col :span="12">
@@ -44,19 +44,19 @@
         <el-col :span="12">
           <el-row>
             <div class="userItem" style="margin-bottom:1rem">
-              <p>必势得用户数</p>
+              <p>惠民折扣用户数</p>
               <count-to :start-val="0" :end-val="webData.total_user" :duration="1000" class="number" />
             </div>
           </el-row>
           <el-row>
             <div class="userItem" style="margin-bottom:1rem">
-              <p>必势得用户购买算力金额</p>
+              <p>惠民折扣用户购买算力金额</p>
               <count-to :start-val="0" :end-val="webData.total_price" :duration="1000" class="number" />
             </div>
           </el-row>
           <el-row>
             <div class="userItem">
-              <p>必势得用户当前运行算力</p>
+              <p>惠民折扣用户当前运行算力</p>
               <count-to :start-val="0" :end-val="webData.total_power" :duration="1000" class="number" />
             </div>
           </el-row>

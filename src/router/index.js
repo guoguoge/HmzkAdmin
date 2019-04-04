@@ -6,7 +6,7 @@ Vue.use(Router)
 /* Layout */
 import Layout from '@/views/layout/Layout'
 /*
-必势得路由
+惠民折扣路由
  */
 import {
   userRouter,

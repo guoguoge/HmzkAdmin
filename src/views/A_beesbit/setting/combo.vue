@@ -8,7 +8,7 @@
       <el-button class="beesbit-sec-btn" @click.native="addCombo">新建套餐</el-button>
     </template>
   </AGTable>
-  <el-dialog :visible.sync="show" title="新建套餐" width="50%" center>
+  <el-dialog :visible.sync="show" title="新" width="50%" center>
     <el-form :rules="rules" :model="form" status-icon ref="form" label-position="top" class="demo-ruleForm">
       <el-form-item style="width:100%" label="套餐标题" prop="title">
         <el-input placeholder="请输入套餐标题" v-model="form.title" autocomplete="off"></el-input>

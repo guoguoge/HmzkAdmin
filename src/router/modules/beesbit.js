@@ -1,7 +1,7 @@
 /** When your routing star is too long, you can split it into small modules**/
 /**
  * [beesbitRouter description]
- * 必势得后台管理路由
+ * 惠民折扣后台管理路由
  * @type {Object}
  */
 import Layout from '@/views/layout/Layout'

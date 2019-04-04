@@ -191,6 +191,7 @@ export default {
     showDialog(num) {
       this.clear()
       this.show = true
+      this.num = num
       if (num == 1) {
         this.title = '新建分类'
       }
@@ -198,6 +199,7 @@ export default {
     submit() {
       if (this.form.cat_name) {
         if (this.num == 1) {
+          console.log(1);
           AddCategory(
             this.token,
             1,

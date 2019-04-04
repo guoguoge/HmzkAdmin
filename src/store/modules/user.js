@@ -71,10 +71,10 @@ const user = {
           const data = jsonpReturn(response.data).msg
           if (jsonpReturn(response.data).status == 1) {
             commit('SET_TOKEN', data.token) // 存入token
-            setToken(data) // 存入的是新的必势得的token
+            setToken(data) // 存入的是新的惠民折扣的token
             console.log(getToken())
             Message({
-              message: '欢迎来到必势得后台管理系统',
+              message: '欢迎来到惠民折扣后台管理系统',
               type: 'success',
               showClose: true
             })
@@ -92,7 +92,7 @@ const user = {
       })
     },
 
-    // 获取用户信息 必势得直接忽略这个步骤
+    // 获取用户信息 惠民折扣直接忽略这个步骤
     GetUserInfo({
       commit,
       state

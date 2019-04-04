@@ -30,7 +30,7 @@ export default {
     /*
    自定义的路由名
      */
-    dashboard: '用户数据统计',
+    dashboard: '夺宝管理',
     introduction: '简述',
     documentation: '文档',
     guide: '引导页',
