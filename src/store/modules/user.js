@@ -71,8 +71,8 @@ const user = {
           const data = jsonpReturn(response.data).msg
           if (jsonpReturn(response.data).status == 1) {
             commit('SET_TOKEN', data.token) // 存入token
-            commit('SET_AGENT', data.is_agent) // 存入身份信息
             setToken(data) //存入的是新的必势得的token
+            console.log(getToken());
             Message({
               message: '欢迎来到必势得后台管理系统',
               type: 'success',
@@ -100,7 +100,6 @@ const user = {
       return new Promise((resolve, reject) => {
         getUserInfo(state.token).then(response => {
           // 由于mockjs 不支持自定义状态码只能这样hack\
-          console.log(getToken());
           if (!response.data) {
             reject('Verification failed, please login again.')
           }

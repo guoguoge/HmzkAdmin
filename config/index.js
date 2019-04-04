@@ -11,7 +11,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: { // 跨域
       '/api': {
-        target: 'http://129.28.67.91/API/public/',
+        target: 'http://129.28.67.91/Hmzk/public/',
         changeOrigin: true,
         pathRewrite: { //重写路径，其实这里就是和上面的target拼接起来
           '^/apis': ''

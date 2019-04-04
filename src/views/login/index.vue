@@ -2,7 +2,7 @@
 <div class="login-container">
   <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="top" status-icon>
     <div class="logo-container">
-      <svg-icon icon-class="logo" class="logo" />
+      <img src="../../assets/logo.png" width="100%">
     </div>
 
     <div class="title-container">
@@ -19,7 +19,7 @@
       <el-input size="large" v-model="loginForm.password" :type="passwordType" :placeholder="$t('login.password')" name="password" auto-complete="on" @keyup.enter.native="handleLogin" />
     </el-form-item>
 
-    <el-button  class="beesbit-btn" size="large" :loading="loading" type="primary" style="width:100%;margin-top:30px;" @click.native.prevent="handleLogin">
+    <el-button class="beesbit-btn" size="large" :loading="loading" type="primary" style="width:100%;margin-top:30px;" @click.native.prevent="handleLogin">
       {{ $t('login.logIn') }}
     </el-button>
 
@@ -109,10 +109,10 @@ export default {
           this.loading = true
           this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
             this.loading = false
-            console.log(12321);
             this.$router.push({
-              path: this.redirect || '/'
+              path:'/'
             })
+            console.log(12321);
           }).catch(() => {
             this.loading = false
           })
@@ -177,14 +177,10 @@ $light_gray: #4D4F5C;
     .logo-container {
         position: relative;
         text-align: center;
-        background-image: url('../../assets/cloud.svg');
-        background-position: top;
-        background-repeat: no-repeat;
-        background-size: auto;
-        .logo {
+        img {
             margin-bottom: 4rem;
-            width: 10rem;
-            height: 3rem;
+            width: 8rem;
+            height: 8rem;
         }
     }
     .title-container {

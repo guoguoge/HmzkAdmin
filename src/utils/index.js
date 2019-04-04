@@ -27,7 +27,7 @@ export const jsonpReturn = (data) => { //处理jsonpReturn格式对象
     return
   } else {
     let s = (data).replace('jsonpReturn', '')
-    s = JSON.parse(s.substring(3, s.length - 2))
+    s = JSON.parse(s.substring(1, s.length - 2))
     return s
   }
 }

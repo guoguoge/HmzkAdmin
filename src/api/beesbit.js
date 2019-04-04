@@ -3,7 +3,7 @@ import request from '@/utils/request'
 export const Login = (username, password) => {
   //管理员登录
   return request({
-    url: 'AdminLogin',
+    url: 'admin_login',
     method: 'post',
     data: {
       username: username,

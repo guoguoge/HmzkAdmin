@@ -16,7 +16,7 @@ export default {
     millorder: '矿机订单',
     mills: '机器列表',
     notice: '公告列表',
-    edit:'编辑公告',
+    edit: '编辑公告',
     user: '用户详情',
     userinfo: '用户数据信息',
     userdata: '用户数据统计',
@@ -104,7 +104,7 @@ export default {
     size: '布局大小'
   },
   login: {
-    title: '欢迎登录必势得后台管理系统',
+    title: '欢迎登录惠民折扣后台管理系统',
     logIn: '登录',
     username: '账号',
     password: '密码',
