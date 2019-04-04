@@ -36,15 +36,81 @@ export const FreezeUser = (token, id, is_allow) => {
   })
 }
 
-
-
-export const AorderList = (token) => {
-  // 后台代理商购买算力列表
+export const AddVestUser = (token, name) => {
+  // 代理商管理员列表
   return request({
-    url: 'Aorder_list',
+    url: 'add_vest_user',
+    method: 'post',
+    data: {
+      token: token,
+      name: name
+    }
+  })
+}
+
+export const VestUser = (token) => {
+  // 代理商管理员列表
+  return request({
+    url: 'statistic_vest_user',
     method: 'post',
     data: {
       token: token
+    }
+  })
+}
+
+export const Category = (token, method) => {
+  // 代理商管理员列表
+  return request({
+    url: 'category',
+    method: 'post',
+    data: {
+      token: token,
+      method: method
+    }
+  })
+}
+
+export const AddCategory = (token, method, cat_name, belong, cat_status) => {
+  // 代理商管理员列表
+  return request({
+    url: 'category',
+    method: 'post',
+    data: {
+      token: token,
+      method: method,
+      cat_name: cat_name,
+      belong: belong,
+      cat_status: cat_status,
+    }
+  })
+}
+
+export const EditCategory = (token, method, id, cat_name, belong, cat_status) => {
+  // 代理商管理员列表
+  return request({
+    url: 'category',
+    method: 'post',
+    data: {
+      token: token,
+      method: method,
+      id: id,
+      cat_name: cat_name,
+      belong: belong,
+      cat_status: cat_status,
+    }
+  })
+}
+
+export const DelCategory = (token, method, id) => {
+  // 代理商管理员列表
+  return request({
+    url: 'category',
+    method: 'post',
+    data: {
+      token: token,
+      method: method,
+      id: id
     }
   })
 }

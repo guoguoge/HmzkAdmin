@@ -101,7 +101,6 @@ import {
 
 import {
   AgentList,
-  AorderList,
   AddAgent,
   AgentPassword,
   AgentChangeStatus,
@@ -425,13 +424,6 @@ export default {
           })
         })
         console.log(this.rowData);
-      })
-    },
-    getAorderList() { //获取代理商采购算力列表
-      AorderList(this.token).then((res) => {
-        let data = jsonpReturn(res.data).msg
-        this.orderRowData = data
-        console.log(data, "data");
       })
     },
     agentChange(id) { //选择查看代理商明细

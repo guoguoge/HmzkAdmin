@@ -1,18 +1,21 @@
 <template>
 <div class="app-container">
-  <AGTable
-  :rowData="rowData"
-  :columnDefs="column"
-  :defaultColDef="config"
-  @financChack="financChack"
-  @operationDelete="operationDelete"
-  @operationEdit="operationEdit"></AGTable>
-  <el-dialog :visible.sync="show" title="修改公告" width="70%" center>
+  <el-row type="flex" justify="end">
+    <el-col :span="4" style="text-align:right;marginBottom:1rem">
+      <el-button type="primary" @click="showDialog(1)"><i class="el-icon-circle-plus"></i> 新增分类</el-button>
+    </el-col>
+  </el-row>
+  <AGTable :rowData="rowData" :columnDefs="column" :defaultColDef="config" @financChack="financChack" @operationDelete="operationDelete" @operationEdit="operationEdit"></AGTable>
+  <el-dialog :visible.sync="show" :title="title" width="20%" center>
     <span slot="footer" class="dialog-footer">
-      <div>
-        {{ rowContent }}
-      </div>
-      <el-button size="large" style="width:100%;" type="primary" @click="show = false">确 定</el-button>
+      <el-input placeholder="请输入内容" v-model="form.cat_name" clearable></el-input>
+      <el-select style="width:100%;marginTop:1rem" v-model="form.belong" placeholder="请选择">
+        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+        </el-option>
+      </el-select>
+      <el-switch style="margin:1rem 0" v-model="form.cat_status" :active-value="1" :inactive-value="2" active-color="#13ce66" inactive-color="#ff4949" active-text="上架" inactive-text="下架">
+      </el-switch>
+      <el-button size="large" style="width:100%;" type="primary" @click="submit">确 定</el-button>
     </span>
   </el-dialog>
 </div>
@@ -34,98 +37,59 @@ import {
   Account,
   AccountCancle,
   AccountCw,
-  AccountCn
+  AccountCn,
+  Category,
+  AddCategory,
+  EditCategory,
+  DelCategory
 } from '@/api/beesbit'
 
 export default {
   data() {
     return {
       rowData: [], //表格源数据
-      column: [
-        {
-          headerName: '用户姓名',
-          field: 'username',
+      column: [{
+          headerName: '分类名',
+          field: 'cat_name',
           cellStyle: {
             color: '#8D8D8D'
-          },
+          }
         },
         {
-          headerName: '用户电话',
-          field: 'tel',
-          cellStyle: {
-            color: '#8D8D8D'
-          },
-        },
-        {
-          headerName: '提现币种',
-          field: 'coin',
-          cellStyle: {
-            color: '#8D8D8D'
-          },
-        },
-        {
-          headerName: '提现地址',
-          field: 'address',
-          cellStyle: {
-            color: '#8D8D8D'
-          },
-          width:400
-        },
-        {
-          headerName: '提现金额',
-          field: 'num',
-          cellStyle: {
-            color: '#8D8D8D'
-          },
-        },
-        {
-          headerName: '提现后余额',
-          field: 'surplus',
+          headerName: '运行',
+          field: 'cat_status',
           cellStyle: {
             color: '#8D8D8D'
           },
           cellRenderer: params => {
-            return Number(params.data.surplus)
+            return params.data.cat_status == 1 ? '上架' : '下架';
           },
           valueGetter: params => {
-            return Number(params.data.surplus)
-          },
+            return params.data.cat_status == 1 ? '上架' : '下架';
+          }
         },
         {
-          headerName: '所属期',
-          field: 'type',
+          headerName: '所属游戏',
+          field: 'cat_status',
           cellStyle: {
             color: '#8D8D8D'
           },
-        },
-        {
-          headerName: '提现时间',
-          field: 'time',
-          cellStyle: {
-            color: '#8D8D8D'
+          cellRenderer: params => {
+            return params.data.belong == 1 ? '夺宝' : params.data.belong == 2 ? '竞猜' : '口红机';
           },
-          width:200
-        },
-        {
-          headerName: '提现状态',
-          field: 'age',
-          cellRendererFramework: 'balancewithdrawBarButton',
-          cellStyle: {
-            color: '#8D8D8D'
-          },
-          pinned: 'right',
-          width: 280,
+          valueGetter: params => {
+            return params.data.belong == 1 ? '夺宝' : params.data.belong == 2 ? '竞猜' : '口红机';
+          }
         },
         {
           headerName: '操作',
           field: '',
-          cellRendererFramework: 'balancewithdrawButton',
+          cellRendererFramework: 'agentOperationButton',
           cellStyle: {
             color: '#8D8D8D'
           },
           pinned: 'right',
-          width: 200,
-        },
+        }
       ],
       config: {
         width: 150,
@@ -135,7 +99,27 @@ export default {
         search: true,
       },
       rowContent: {},
-      show: false
+      show: false,
+      options: [{
+          value: '1',
+          label: '夺宝'
+        }, {
+          value: '2',
+          label: '竞猜'
+        },
+        {
+          value: '2',
+          label: '口红机'
+        }
+      ],
+      form: {
+        cat_name: '',
+        belong: '1',
+        cat_status: ''
+      },
+      title: '',
+      cateId: ''
+
     }
   },
   computed: {
@@ -148,23 +132,29 @@ export default {
   },
   methods: {
     init() {
-      Account(this.token).then(res => {
+      Category(this.token, 4).then(res => {
         this.rowData = checkRequest(res, false)
         console.log(this.rowData);
       })
     },
     operationEdit(row, index) {
+      this.cateId = row.id
+      this.num = 2
       this.show = true
-      this.rowContent = row
-      console.log(row, index)
+      this.title = '修改分类'
+      this.form.cat_name = row.cat_name
+      this.form.belong = row.belong.toString()
+      this.form.cat_status = row.cat_status
     },
     operationDelete(row, index) {
-      AccountCancle(
+      DelCategory(
         this.token,
+        2,
         row.id).then(res => {
-        checkRequest(res, true)
-        this.show = false
-        this.init()
+        if(checkRequest(res, true)){
+          this.show = false
+          this.init()
+        }
       })
     },
     financChack(params, index) {
@@ -177,13 +167,13 @@ export default {
        * @type {[type]}
        */
       let auditing = (params.cwcode == 1 ? 1 : 2) //auditing 为 1 的时候
-      if(auditing == 1){
+      if (auditing == 1) {
         AccountCw(this.token, params.id).then(res => {
           if (checkRequest(res, true)) {
             this.init()
           }
         })
-      }else{
+      } else {
         AccountCn(this.token, params.id).then(res => {
           if (checkRequest(res, true)) {
             this.init()
@@ -191,6 +181,61 @@ export default {
         })
       }
     },
+    clear() {
+      this.form = {
+        cat_name: '',
+        belong: '1',
+        cat_status: ''
+      }
+    },
+    showDialog(num) {
+      this.clear()
+      this.show = true
+      if (num == 1) {
+        this.title = '新建分类'
+      }
+    },
+    submit() {
+      if (this.form.cat_name) {
+        if (this.num == 1) {
+          AddCategory(
+            this.token,
+            1,
+            this.form.cat_name,
+            this.form.belong,
+            this.form.cat_status,
+          ).then(res => {
+            if (checkRequest(res, false)) {
+              this.rowData = checkRequest(res, false)
+              this.clear()
+              this.init()
+              this.show = false
+            }
+          })
+        } else {
+          EditCategory(
+            this.token,
+            3,
+            this.cateId,
+            this.form.cat_name,
+            this.form.belong,
+            this.form.cat_status,
+          ).then(res => {
+            if (checkRequest(res, false)) {
+              this.rowData = checkRequest(res, false)
+              this.clear()
+              this.init()
+              this.show = false
+            }
+          })
+        }
+      } else {
+        this.$message({
+          message: '请确认分类名已填写',
+          type: 'error'
+        })
+      }
+    }
   },
   created() {
     this.init()
