@@ -64,30 +64,14 @@
 
 
         <el-form-item label="" prop="age">
-          <el-upload
-            class="upload-demo"
-            action="#"
-            :multiple="false"
-            :limit="1"
-            :before-upload="handleUpload"
-            :on-preview="handlePreview"
-            :on-remove="handleRemove"
-            :file-list="fileList"
-            list-type="picture">
+          <el-upload class="upload-demo" action="#" :multiple="false" :limit="1" :before-upload="handleUpload" :on-preview="handlePreview" :on-remove="handleRemove" :file-list="fileList" list-type="picture">
             <el-button size="small" type="primary">点击上传</el-button>
             <div slot="tip" class="el-upload__tip">封面图</div>
           </el-upload>
         </el-form-item>
 
         <el-form-item label="" prop="age">
-          <el-upload
-            class="upload-demo"
-            action="#"
-            :before-upload="handleUpload2"
-            :on-preview="handlePreview2"
-            :on-remove="handleRemove2"
-            :file-list="fileList2"
-            list-type="picture">
+          <el-upload class="upload-demo" action="#" :before-upload="handleUpload2" :on-preview="handlePreview2" :on-remove="handleRemove2" :file-list="fileList2" list-type="picture">
             <el-button size="small" type="primary">点击上传</el-button>
             <div slot="tip" class="el-upload__tip">详情图</div>
           </el-upload>
@@ -110,7 +94,8 @@ import AGTable from '@/components/Table/AGTable'
 
 import {
   jsonpReturn,
-  checkRequest
+  checkRequest,
+  formatDate
 } from '@/utils'
 
 import {
@@ -197,14 +182,26 @@ export default {
           field: 'start',
           cellStyle: {
             color: '#8D8D8D'
-          }
+          },
+          cellRenderer: params => {
+            return formatDate(params.data.start);
+          },
+          valueGetter: params => {
+            return formatDate(params.data.start);
+          },
         },
         {
           headerName: '结束时间',
           field: 'end',
           cellStyle: {
             color: '#8D8D8D'
-          }
+          },
+          cellRenderer: params => {
+            return formatDate(params.data.end);
+          },
+          valueGetter: params => {
+            return formatDate(params.data.end);
+          },
         },
         {
           headerName: '运行',
@@ -305,9 +302,9 @@ export default {
       categoryList: [],
       dialogImageUrl: '',
       dialogVisible: false,
-      fileList:[],
-      fileList2:[],
-      num:''
+      fileList: [],
+      fileList2: [],
+      num: ''
     }
   },
   computed: {
@@ -342,7 +339,7 @@ export default {
       this.cateId = row.id
       this.num = 2
       this.show = true
-      this.title = '修改夺宝商品'
+      this.title = '修改夺宝商品(商品图片需重新上传)'
 
       this.form.category = row.category
       this.form.name = row.name
@@ -376,8 +373,8 @@ export default {
       }
     },
     handleRemove(file, fileList) {
-            console.log(file, fileList);
-          },
+      console.log(file, fileList);
+    },
     handlePreview(file) {
       console.log(file);
     },
@@ -408,8 +405,8 @@ export default {
     showDialog(num) {
       this.clear()
       this.show = true
+      this.num = 1
       if (num == 1) {
-        this.num =1
         this.title = '新建夺宝商品'
       }
     },
@@ -430,19 +427,23 @@ export default {
       })
       let FD = new FormData()
 
-      FD.append('token',this.token)
-      FD.append('method',1)
-      FD.append('name',this.form.name)
-      FD.append('category',this.form.category)
-      FD.append('price',this.form.price)
-      FD.append('vest_user',this.form.vest_user)
-      FD.append('popular',this.form.popular)
-      FD.append('start',this.form.start/1000)
-      FD.append('end',this.form.end/1000)
-      FD.append('status',this.form.status)
-      FD.append('cover_img',this.file)
-      this.fileList2.forEach((item,index)=>{
-        FD.append('detail_img' + index,item)
+      FD.append('token', this.token)
+      FD.append('method', this.num == 1 ? 1 : 3)
+      FD.append('name', this.form.name)
+      FD.append('category', this.form.category)
+      FD.append('price', this.form.price)
+      FD.append('vest_user', this.form.vest_user)
+      FD.append('popular', this.form.popular)
+      FD.append('start', this.form.start / 1000)
+      FD.append('end', this.form.end / 1000)
+      FD.append('status', this.form.status)
+      FD.append('cover_img', this.file)
+      if (this.num == 2) {
+        FD.append('id', this.cateId)
+
+      }
+      this.fileList2.forEach((item, index) => {
+        FD.append('detail_img' + index, item)
       })
       if (this.form.name) {
         if (this.num == 1) {
@@ -465,6 +466,11 @@ export default {
               this.fileList2 = ''
               this.init()
               this.show = false
+            } else {
+              this.$message({
+                message: checkRequest(res, false),
+                type: 'error'
+              })
             }
           })
         }
