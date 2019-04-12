@@ -53,6 +53,28 @@ export const constantRouterMap = [{
     }]
   },
   {
+    path: '',
+    component: Layout,
+    redirect: '/workbench',
+    meta: {
+      title: 'workbench',
+      icon: 'peoples',
+    },
+    children: [{
+      path: '/workbench',
+      name: 'workbench',
+      component: () =>
+        import('@/views/A_beesbit/workbench/workbench'),
+      meta: {
+        title: 'workbench',
+        icon: 'peoples'
+      },
+    }]
+  },
+  userRouter,
+  orderRouter,
+  withdrawRouter,
+  {
     path: '/',
     component: Layout,
     redirect: '/',
@@ -62,18 +84,14 @@ export const constantRouterMap = [{
       icon: 'star'
     },
     children: [{
-        path: 'http://129.28.67.91/admin.php',
-        name: 'userinfo',
-        meta: {
-          title: '口红机后台',
-          icon: 'star'
-        }
+      path: 'http://129.28.67.91/admin.php',
+      name: 'userinfo',
+      meta: {
+        title: '口红机后台',
+        icon: 'star'
       }
-    ]
+    }]
   },
-  userRouter,
-  orderRouter,
-  withdrawRouter,
   {
     path: '/login',
     component: () =>
@@ -108,7 +126,8 @@ export default new Router({
   routes: constantRouterMap
 })
 
-export const asyncRouterMap = [{
+export const asyncRouterMap = [
+  {
     path: '/redirect',
     component: Layout,
     hidden: true,
@@ -123,33 +142,6 @@ export const asyncRouterMap = [{
   /*
   代理商控制台
    */
-  {
-    path: '/agent',
-    component: Layout,
-    redirect: '/agent',
-    meta: {
-      title: 'agent',
-      icon: 'peoples'
-    },
-    children: [{
-      path: '/agent',
-      name: 'agent',
-      component: () =>
-        import('@/views/A_beesbit/agent/agent'),
-      meta: {
-        title: 'agent',
-        icon: 'peoples'
-      },
-      hidden: true
-    }]
-  },
-
-  /*
-  代理商工作台
-   */
-  statusRouter,
-  settingRouter,
-
   {
     path: '*',
     redirect: '/404',

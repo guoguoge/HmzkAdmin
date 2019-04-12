@@ -62,7 +62,7 @@ export default {
         {
           headerName: '账户余额',
           field: 'balance',
-          cellStyle: {
+            cellStyle: {
             color: '#8D8D8D'
           },
           cellRendererFramework: 'statusButton',

@@ -59,14 +59,7 @@ const permission = {
         const agent = data
         console.log(agent.agent, "agent2");
         let accessedRouters
-        if (agent.agent == 0) {
-          accessedRouters = asyncRouterMap
-          //如果用户为'0' 那么所有的路由对齐开放 管理员
-        } else {
-          accessedRouters = [].concat(agentRouterMap)
-          // accessedRouters = filterAsyncRouter(asyncRouterMap, roles)
-          //如果用户的权限不包含'admin' 那么分配匹配的路由对齐开放
-        }
+        accessedRouters = asyncRouterMap
         console.log(accessedRouters);
         commit('SET_ROUTERS', accessedRouters)
         resolve()

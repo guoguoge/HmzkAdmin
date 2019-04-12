@@ -5,7 +5,7 @@ export default {
      */
 
     agent: '代理商控制台',
-    workbench: '工作台',
+    workbench: '竞拍管理',
     order: '用户订单',
     neworder: '用户马甲管理',
     reneworder: '续费订单列表',

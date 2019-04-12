@@ -12,19 +12,19 @@
         <el-row type="flex" justify="space-between" :gutter="20">
           <el-col>
             <el-form-item style="width:100%" label="商品名称" prop="name">
-              <el-input placeholder="请输入管理账号" v-model="form.name" autocomplete="off"></el-input>
+              <el-input placeholder="请输入商品名称" v-model="form.name" autocomplete="off"></el-input>
             </el-form-item>
           </el-col>
           <el-col>
             <el-form-item style="width:100%" label="商品分类" prop="category">
-              <el-select style="width:100%" v-model="form.category" placeholder="商品分类">
-                <el-option v-for="(item,index) in categoryList" :key="item.value" :label="item.label" :value="item.value" />
+              <el-select style="width:100%" v-model="form.category" placeholder="选择商品分类">
+                <el-option v-for="(item,index) in categoryList" :key="index" :label="item.label" :value="item.value" />
               </el-select>
             </el-form-item>
           </el-col>
           <el-col>
-            <el-form-item style="width:100%" label="参与价格" prop="price">
-              <el-input placeholder="请输入参与价格" v-model="form.price" autocomplete="off"></el-input>
+            <el-form-item label="参与价格" prop="price">
+              <el-input-number style="width:100%" v-model="form.price" :min="0" label="请输入参与价格"></el-input-number>
             </el-form-item>
           </el-col>
         </el-row>
@@ -32,14 +32,14 @@
         <el-row type="flex" justify="space-between" :gutter="20">
           <el-col>
             <el-form-item label="马甲中奖id(非必填)" prop="vest_user">
-              <el-select style="width:100%" v-model="form.vest_user" placeholder="马甲中奖id">
-                <el-option v-for="(item,index) in vestUserList" :key="item.id" :label="'姓名: ' + item.name + 'id: '+item.id" :value="item.id" />
+              <el-select style="width:100%" v-model="form.vest_user" placeholder="马甲中奖人(非必填)">
+                <el-option v-for="(item,index) in vestUserList" :key="index" :label="item.name" :value="item.id" />
               </el-select>
             </el-form-item>
           </el-col>
           <el-col>
             <el-form-item label="基础人气(非必填)" prop="popular">
-              <el-input placeholder="基础人气" v-model="form.popular" autocomplete="off"></el-input>
+              <el-input-number style="width:100%" v-model="form.popular" :min="0" label="输入基础人气(非必填)"></el-input-number>
             </el-form-item>
           </el-col>
         </el-row>
@@ -57,23 +57,22 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item label="" prop="age">
+        <el-form-item label="" prop="status">
           <div class="">
             <el-switch style="margin:1rem 0" v-model="form.status" :active-value="1" :inactive-value="2" active-color="#13ce66" inactive-color="#ff4949" active-text="上架" inactive-text="下架">
             </el-switch>
           </div>
         </el-form-item>
 
-
         <el-form-item label="" prop="age">
-          <el-upload class="upload-demo" action="#" :multiple="false" :limit="1" :before-upload="handleUpload" :on-preview="handlePreview" :on-remove="handleRemove" :file-list="fileList" list-type="picture">
+          <el-upload class="upload-demo" action="#" :multiple="false" :limit="1" :before-upload="handleUpload" :file-list="fileList">
             <el-button size="small" type="primary">点击上传</el-button>
             <div slot="tip" class="el-upload__tip">封面图</div>
           </el-upload>
         </el-form-item>
 
         <el-form-item label="" prop="age">
-          <el-upload class="upload-demo" action="#" :before-upload="handleUpload2" :on-preview="handlePreview2" :on-remove="handleRemove2" :file-list="fileList2" list-type="picture">
+          <el-upload class="upload-demo" action="#" :before-upload="handleUpload2" :file-list="fileList2">
             <el-button size="small" type="primary">点击上传</el-button>
             <div slot="tip" class="el-upload__tip">详情图</div>
           </el-upload>
@@ -253,14 +252,14 @@ export default {
       rowContent: {},
       show: false,
       form: {
-        category: '1',
+        category: '',
         name: '',
-        price: '',
+        price: 0,
         vest_user: '',
-        popular: '',
+        popular: 0,
         start: '',
         end: '',
-        status: '1',
+        status: 1,
         cover_img: '',
         detail_img: ''
       },
@@ -272,18 +271,18 @@ export default {
           trigger: 'blur'
         }],
         price: [{
-          type: 'string',
+          type: 'number',
           required: true,
           message: '请输入参与价格',
           trigger: 'blur'
         }],
         vest_user: [{
-          type: 'string',
+          type: 'number',
           message: '请输入马甲中奖id',
           trigger: 'blur'
         }],
         popular: [{
-          type: 'string',
+          type: 'number',
           message: '基础人气',
           trigger: 'blur'
         }],
@@ -350,7 +349,7 @@ export default {
       this.cateId = row.id
       this.num = 2
       this.show = true
-      this.title = '修改夺宝商品(商品图片需重新上传)'
+      this.title = '修改夺宝商品(注意:商品图片需重新上传!!!)'
 
       this.form.category = row.category
       this.form.name = row.name
@@ -372,49 +371,31 @@ export default {
         }
       })
     },
-    upload(file) {
-      console.log(file);
-      this.img = file
-      let img = this.$refs.img
-      let freader = new FileReader();
-      freader.readAsDataURL(file);
-      freader.onload = function(e) {
-        console.log(e);
-        img.setAttribute('src', e.target.result);
-      }
-    },
-    handleRemove(file, fileList) {
-      console.log(file, fileList);
-    },
-    handlePreview(file) {
-      console.log(file);
-    },
+    // upload(file) {
+    //   console.log(file);
+    //   this.img = file
+    //   let img = this.$refs.img
+    //   let freader = new FileReader();
+    //   freader.readAsDataURL(file);
+    //   freader.onload = function(e) {
+    //     img.setAttribute('src', e.target.result);
+    //   }
+    // },
     handleUpload(file) {
       console.log(file);
-      this.file = file;
+      this.fileList = []
       this.fileList.push(file)
       return false
-    },
-    handleRemove2(file, fileList) {
-      console.log(file, fileList);
-    },
-    handlePreview2(file) {
-      console.log(file);
     },
     handleUpload2(file) {
       console.log(file);
       this.fileList2.push(file)
       return false
     },
-    clear() {
-      this.form = {
-        cat_name: '',
-        belong: '1',
-        cat_status: ''
-      }
-    },
     showDialog(num) {
-      this.clear()
+      this.$refs['form'].resetFields();
+      this.fileList = []
+      this.fileList2 = []
       this.show = true
       this.num = 1
       if (num == 1) {
@@ -423,12 +404,79 @@ export default {
     },
     submit() {
       console.log(this.form);
-      console.log(this.file);
+      console.log(this.fileList);
       console.log(this.fileList2);
       console.log(this.num);
       this.$refs['form'].validate((valid) => {
         if (valid) {
+          let FD = new FormData()
 
+          FD.append('token', this.token)
+          FD.append('method', this.num == 1 ? 1 : 3)
+          FD.append('name', this.form.name)
+          FD.append('category', this.form.category)
+          FD.append('price', this.form.price)
+          FD.append('vest_user', Number(this.form.vest_user))
+          FD.append('popular', this.form.popular)
+          FD.append('start', this.form.start / 1000)
+          FD.append('end', this.form.end / 1000)
+          FD.append('status', this.form.status)
+          FD.append('cover_img', this.fileList[0])
+          if (this.num == 2) {
+            FD.append('id', this.cateId)
+          }
+          this.fileList2.forEach((item, index) => {
+            FD.append('detail_img' + index, item)
+          })
+          if (this.fileList[0] && this.fileList2) {
+            if (this.form.name) {
+              if (this.num == 1) { // 新增
+                AddTreasure(FD).then(res => {
+                  if (checkRequest(res, false)) {
+                    this.$message({
+                      message: '新建商品成功!',
+                      type: 'success'
+                    })
+                    this.$refs['form'].resetFields();
+                    this.fileList = []
+                    this.fileList2 = []
+                    this.init()
+                    this.show = false
+                  }
+                })
+              } else { // 修改
+                EditTreasure(FD).then(res => {
+                  if (checkRequest(res, false)) {
+                    this.$message({
+                      message: '修改商品成功!',
+                      type: 'success'
+                    })
+                    this.rowData = checkRequest(res, false)
+                    this.$refs['form'].resetFields();
+                    this.fileList = []
+                    this.fileList2 = []
+                    this.init()
+                    this.show = false
+                  } else {
+                    this.$message({
+                      message: jsonpReturn(res).msg,
+                      type: 'error'
+                    })
+                  }
+                })
+              }
+            } else {
+              this.$message({
+                message: jsonpReturn(res).msg,
+                type: 'error'
+              })
+            }
+          } else {
+            this.$message({
+              message: '请按确保图片上传',
+              type: 'error'
+            })
+          }
         } else {
           this.$message({
             message: '请按要求填写表单',
@@ -436,61 +484,6 @@ export default {
           })
         }
       })
-      let FD = new FormData()
-
-      FD.append('token', this.token)
-      FD.append('method', this.num == 1 ? 1 : 3)
-      FD.append('name', this.form.name)
-      FD.append('category', this.form.category)
-      FD.append('price', this.form.price)
-      FD.append('vest_user', this.form.vest_user)
-      FD.append('popular', this.form.popular)
-      FD.append('start', this.form.start / 1000)
-      FD.append('end', this.form.end / 1000)
-      FD.append('status', this.form.status)
-      FD.append('cover_img', this.file)
-      if (this.num == 2) {
-        FD.append('id', this.cateId)
-
-      }
-      this.fileList2.forEach((item, index) => {
-        FD.append('detail_img' + index, item)
-      })
-      if (this.form.name) {
-        if (this.num == 1) {
-          AddTreasure(FD).then(res => {
-            if (checkRequest(res, false)) {
-              this.rowData = checkRequest(res, false)
-              this.$refs['form'].resetFields();
-              this.file = ''
-              this.fileList2 = ''
-              this.init()
-              this.show = false
-            }
-          })
-        } else {
-          EditTreasure(FD).then(res => {
-            if (checkRequest(res, false)) {
-              this.rowData = checkRequest(res, false)
-              this.$refs['form'].resetFields();
-              this.file = ''
-              this.fileList2 = ''
-              this.init()
-              this.show = false
-            } else {
-              this.$message({
-                message: checkRequest(res, false),
-                type: 'error'
-              })
-            }
-          })
-        }
-      } else {
-        this.$message({
-          message: '请确认分类名已填写',
-          type: 'error'
-        })
-      }
     }
   },
   created() {

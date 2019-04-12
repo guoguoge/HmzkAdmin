@@ -15,7 +15,7 @@
       slot="reference"
       title="删除"
       size="mini"
-      type="danger"
+      :type="params.data.is_allow == 1?'danger':'success'"
       @click="visible = true">
      {{params.data.is_allow == 1?'封号':'解封'}}
     </el-button>
