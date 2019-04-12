@@ -11,7 +11,7 @@
 
   <el-popover
     placement="top-start"
-    title="确认删除?"
+    :title="params.data.status == 1?'确认下架竞拍?':'确认上架竞拍?'"
     width="180"
     trigger="click"
     v-model="visible"
@@ -23,10 +23,10 @@
     <el-button
       slot="reference"
       size="mini"
-      type="danger"
+      :type="params.data.status == 1?'danger':'success'"
       v-if="data"
       @click="visible = true">
-      删除
+      {{ params.data.status == 1?'下架':'上架'}}
     </el-button>
   </el-popover>
 

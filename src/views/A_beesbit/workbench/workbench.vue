@@ -6,7 +6,7 @@
     </el-col>
   </el-row>
   <AGTable :rowData="rowData" :columnDefs="column" :defaultColDef="config" @operationDelete="operationDelete" @operationEdit="operationEdit"></AGTable>
-  <el-dialog :visible.sync="show" :title="title" width="50%" center>
+  <el-dialog :visible.sync="show" :title="title" width="70%" center>
     <span slot="footer" class="dialog-footer">
       <el-form status-icon ref="form" :rules="rules" :model="form" label-position="left" class="demo-ruleForm">
         <el-row type="flex" justify="space-between" :gutter="20">
@@ -23,8 +23,13 @@
             </el-form-item>
           </el-col>
           <el-col>
-            <el-form-item label="参与价格" prop="price">
-              <el-input-number style="width:100%" v-model="form.price" :min="0" label="请输入参与价格"></el-input-number>
+            <el-form-item label="起拍价格" prop="bottom_price">
+              <el-input-number style="width:100%" v-model.number="form.bottom_price" :min="1" label="起拍价格"></el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item label="单次加价价格" prop="raise_price">
+              <el-input-number style="width:100%" v-model.number="form.raise_price" :min="1" label="单次加价价格"></el-input-number>
             </el-form-item>
           </el-col>
         </el-row>
@@ -33,13 +38,18 @@
           <el-col>
             <el-form-item label="马甲中奖id(非必填)" prop="vest_user">
               <el-select style="width:100%" v-model="form.vest_user" placeholder="马甲中奖人(非必填)">
-                <el-option v-for="(item,index) in vestUserList" :key="index" :label="item.name" :value="item.id" />
+                <el-option v-for="(item,index) in vestUserList" :key="index" :label="item.name" :value="String(item.id)" />
               </el-select>
             </el-form-item>
           </el-col>
           <el-col>
-            <el-form-item label="基础人气(非必填)" prop="popular">
-              <el-input-number style="width:100%" v-model="form.popular" :min="0" label="输入基础人气(非必填)"></el-input-number>
+            <el-form-item label="马甲号竞拍价格(非必填)" prop="vest_price">
+              <el-input placeholder="马甲号竞拍价格(非必填)" v-model="form.vest_price"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item label="基础人气" prop="hot">
+              <el-input-number style="width:100%" v-model="form.hot" :min="1" label="输入基础人气(非必填)"></el-input-number>
             </el-form-item>
           </el-col>
         </el-row>
@@ -57,21 +67,15 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item label="" prop="status">
-          <div class="">
-            <el-switch style="margin:1rem 0" v-model="form.status" :active-value="1" :inactive-value="2" active-color="#13ce66" inactive-color="#ff4949" active-text="上架" inactive-text="下架">
-            </el-switch>
-          </div>
-        </el-form-item>
 
-        <el-form-item label="" prop="age">
+        <el-form-item>
           <el-upload class="upload-demo" action="#" :multiple="false" :limit="1" :before-upload="handleUpload" :file-list="fileList">
             <el-button size="small" type="primary">点击上传</el-button>
             <div slot="tip" class="el-upload__tip">封面图</div>
           </el-upload>
         </el-form-item>
 
-        <el-form-item label="" prop="age">
+        <el-form-item>
           <el-upload class="upload-demo" action="#" :before-upload="handleUpload2" :file-list="fileList2">
             <el-button size="small" type="primary">点击上传</el-button>
             <div slot="tip" class="el-upload__tip">详情图</div>
@@ -104,13 +108,15 @@ import {
 } from 'vuex'
 
 import {
-  Category,
-  AddTreasure,
-  EditTreasure,
+  ACate,
+  AddAuction,
+  EditAuction,
   DelCategory,
   ListTreasure,
   DelTreasure,
-  VestUser
+  VestUser,
+  AuctionList,
+  ChangeAuction
 } from '@/api/beesbit'
 
 export default {
@@ -126,28 +132,63 @@ export default {
         },
         {
           headerName: '分类名',
-          field: 'cat_name',
+          field: 'cate_name',
           cellStyle: {
             color: '#8D8D8D'
           }
         },
         {
-          headerName: '参与价格',
-          field: 'price',
+          headerName: '分类id',
+          field: 'cate_id',
           cellStyle: {
             color: '#8D8D8D'
           }
         },
         {
-          headerName: '封面图',
-          field: 'cat_name',
+          headerName: '开始时间',
+          field: 'start',
           cellStyle: {
             color: '#8D8D8D'
           }
         },
         {
-          headerName: '详情图',
-          field: 'cat_name',
+          headerName: '结束时间',
+          field: 'end',
+          cellStyle: {
+            color: '#8D8D8D'
+          }
+        },
+        {
+          headerName: '人气',
+          field: 'hot',
+          cellStyle: {
+            color: '#8D8D8D'
+          }
+        },
+        {
+          headerName: '马甲号ID',
+          field: 'vest_user',
+          cellStyle: {
+            color: '#8D8D8D'
+          }
+        },
+        {
+          headerName: '马甲号的出价',
+          field: 'vest_price',
+          cellStyle: {
+            color: '#8D8D8D'
+          }
+        },
+        {
+          headerName: '起拍价',
+          field: 'bottom_price',
+          cellStyle: {
+            color: '#8D8D8D'
+          }
+        },
+        {
+          headerName: '加价',
+          field: 'raise_price',
           cellStyle: {
             color: '#8D8D8D'
           }
@@ -174,36 +215,10 @@ export default {
         },
         {
           headerName: '人气',
-          field: 'popular',
+          field: 'hot',
           cellStyle: {
             color: '#8D8D8D'
           }
-        },
-        {
-          headerName: '开始时间',
-          field: 'start',
-          cellStyle: {
-            color: '#8D8D8D'
-          },
-          cellRenderer: params => {
-            return formatDate(params.data.start);
-          },
-          valueGetter: params => {
-            return formatDate(params.data.start);
-          },
-        },
-        {
-          headerName: '结束时间',
-          field: 'end',
-          cellStyle: {
-            color: '#8D8D8D'
-          },
-          cellRenderer: params => {
-            return formatDate(params.data.end);
-          },
-          valueGetter: params => {
-            return formatDate(params.data.end);
-          },
         },
         {
           headerName: '运行',
@@ -221,11 +236,12 @@ export default {
         {
           headerName: '操作',
           field: '',
-          cellRendererFramework: 'agentOperationButton',
+          cellRendererFramework: 'actionOperationButton',
           cellStyle: {
             color: '#8D8D8D'
           },
           pinned: 'right',
+          width: 200
         }
       ],
       config: {
@@ -253,17 +269,26 @@ export default {
       show: false,
       form: {
         category: '',
-        name: '',
+        name: '', //商品名称
         price: 0,
         vest_user: '',
-        popular: 0,
-        start: '',
-        end: '',
+        vest_price: '', // 	选择马甲号ID则马甲号竞拍价格为必须  且不能低于 初始价格
+        bottom_price: 1, // 起拍价
+        raise_price: 1, // 加价
+        hot: 1,
+        start: '', // 开始时间
+        end: '', // 结束时间
         status: 1,
         cover_img: '',
         detail_img: ''
       },
       rules: {
+        name: [{
+          type: 'string',
+          required: true,
+          message: '请输入商品名称',
+          trigger: 'blur'
+        }],
         category: [{
           type: 'number',
           required: true,
@@ -277,11 +302,27 @@ export default {
           trigger: 'blur'
         }],
         vest_user: [{
-          type: 'number',
-          message: '请输入马甲中奖id',
+          message: '请输入马甲号',
           trigger: 'blur'
         }],
-        popular: [{
+        vest_price: [{
+          type: 'string',
+          message: '请输入马甲号竞拍价格',
+          trigger: 'blur'
+        }],
+        raise_price: [{
+          required: true,
+          type: 'number',
+          message: '请输入单次加价',
+          trigger: 'blur'
+        }],
+        bottom_price: [{
+          required: true,
+          type: 'number',
+          message: '请输入起拍价格',
+          trigger: 'blur'
+        }],
+        hot: [{
           type: 'number',
           message: '基础人气',
           trigger: 'blur'
@@ -320,21 +361,20 @@ export default {
   },
   methods: {
     init() {
-      ListTreasure(this.token, 4).then(res => {
+      AuctionList(this.token, 4).then(res => {
         this.rowData = checkRequest(res, false)
         console.log(this.rowData);
       })
-      Category(this.token, 4).then(res => {
+      ACate(this.token, 4).then(res => {
         let data = checkRequest(res, false)
         data.forEach((item) => {
           this.categoryList.push({
-            value: item.id,
+            value: item.cate_id,
             label: item.cat_name
           })
         })
         this.form.category = this.categoryList[0].value
         console.log(checkRequest(res, false));
-        console.log(typeof this.categoryList[0].value);
       })
       VestUser(this.token).then(res => {
         let data = checkRequest(res, false)
@@ -346,25 +386,32 @@ export default {
 
     },
     operationEdit(row, index) {
+      console.log(row,'row');
+      console.log(Date.parse(new Date(row.end)), "时间");
       this.cateId = row.id
       this.num = 2
       this.show = true
-      this.title = '修改竞拍商品(注意:商品图片需重新上传!!!)'
+      this.title = '修改竞拍商品'
 
-      this.form.category = row.category
+
+      this.form.category = row.cate_id
       this.form.name = row.name
       this.form.price = row.price
       this.form.vest_user = row.vest_user
-      this.form.popular = row.popular
-      this.form.start = row.start * 1000
-      this.form.end = row.end * 1000
+      this.form.hot = row.hot
+      this.form.start = Date.parse(new Date(row.start))
+      this.form.end = Date.parse(new Date(row.end))
       this.form.status = row.status
     },
     operationDelete(row, index) {
-      DelTreasure(
-        this.token,
-        2,
-        row.id).then(res => {
+
+      let FD = new FormData()
+
+      FD.append('token', this.token)
+      FD.append('method', 2)
+      FD.append('id', row.id)
+      FD.append('status', row.status == 1 ? 2 : 1)
+      ChangeAuction(FD).then(res => {
         if (checkRequest(res, true)) {
           this.show = false
           this.init()
@@ -414,10 +461,12 @@ export default {
           FD.append('token', this.token)
           FD.append('method', this.num == 1 ? 1 : 3)
           FD.append('name', this.form.name)
-          FD.append('category', this.form.category)
-          FD.append('price', this.form.price)
-          FD.append('vest_user', Number(this.form.vest_user))
-          FD.append('popular', this.form.popular)
+          FD.append('cate_id', this.form.category)
+          FD.append('bottom_price', this.form.bottom_price)
+          FD.append('raise_price', this.form.raise_price)
+          FD.append('vest_user', this.form.vest_user)
+          FD.append('vest_price', this.form.vest_price)
+          FD.append('hot', this.form.hot)
           FD.append('start', this.form.start / 1000)
           FD.append('end', this.form.end / 1000)
           FD.append('status', this.form.status)
@@ -426,54 +475,52 @@ export default {
             FD.append('id', this.cateId)
           }
           this.fileList2.forEach((item, index) => {
-            FD.append('detail_img' + index, item)
+            FD.append('detail_img[]', item)
           })
-          if (this.fileList[0] && this.fileList2) {
-            if (this.form.name) {
-              if (this.num == 1) { // 新增
-                AddTreasure(FD).then(res => {
-                  if (checkRequest(res, false)) {
-                    this.$message({
-                      message: '新建商品成功!',
-                      type: 'success'
-                    })
-                    this.$refs['form'].resetFields();
-                    this.fileList = []
-                    this.fileList2 = []
-                    this.init()
-                    this.show = false
-                  }
-                })
-              } else { // 修改
-                EditTreasure(FD).then(res => {
-                  if (checkRequest(res, false)) {
-                    this.$message({
-                      message: '修改商品成功!',
-                      type: 'success'
-                    })
-                    this.rowData = checkRequest(res, false)
-                    this.$refs['form'].resetFields();
-                    this.fileList = []
-                    this.fileList2 = []
-                    this.init()
-                    this.show = false
-                  } else {
-                    this.$message({
-                      message: jsonpReturn(res).msg,
-                      type: 'error'
-                    })
-                  }
-                })
-              }
-            } else {
-              this.$message({
-                message: jsonpReturn(res).msg,
-                type: 'error'
+          if (this.form.name) {
+            if (this.num == 1) { // 新增
+              AddAuction(FD).then(res => {
+                if (checkRequest(res, false)) {
+                  this.$message({
+                    message: '新建商品成功!',
+                    type: 'success'
+                  })
+                  this.$refs['form'].resetFields();
+                  this.fileList = []
+                  this.fileList2 = []
+                  this.init()
+                  this.show = false
+                } else {
+                  this.$message({
+                    message: jsonpReturn(res.data).msg,
+                    type: 'error'
+                  })
+                }
+              })
+            } else { // 修改
+              EditAuction(FD).then(res => {
+                if (checkRequest(res, false)) {
+                  this.$message({
+                    message: '修改商品成功!',
+                    type: 'success'
+                  })
+                  this.rowData = checkRequest(res, false)
+                  this.$refs['form'].resetFields();
+                  this.fileList = []
+                  this.fileList2 = []
+                  this.init()
+                  this.show = false
+                } else {
+                  this.$message({
+                    message: jsonpReturn(res.data).msg,
+                    type: 'error'
+                  })
+                }
               })
             }
           } else {
             this.$message({
-              message: '请按确保图片上传',
+              message: jsonpReturn(res.data).msg,
               type: 'error'
             })
           }

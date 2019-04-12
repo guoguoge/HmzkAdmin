@@ -83,6 +83,7 @@ import balancewithdrawButton from './component/balancewithdrawButton.vue'
 import balancewithdrawBarButton from './component/balancewithdrawBarButton.vue'
 import millOrderButton from './component/millOrderButton.vue'
 import poptipButton from './component/poptipButton.vue'
+import actionOperationButton from './component/actionOperationButton.vue'
 
 export default {
   components: {
@@ -101,7 +102,8 @@ export default {
     balancewithdrawButton,
     balancewithdrawBarButton,
     millOrderButton,
-    poptipButton
+    poptipButton,
+    actionOperationButton
   },
   props: {
     rowData: { //表格源数据

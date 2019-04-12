@@ -55,10 +55,10 @@ module.exports = {
 
   build: {
     // Template for index.html
-    index: path.resolve(__dirname, '../BeesbitAdmin/index.html'),
+    index: path.resolve(__dirname, '../HmzkAdmin/index.html'),
 
     // Paths
-    assetsRoot: path.resolve(__dirname, '../BeesbitAdmin'),
+    assetsRoot: path.resolve(__dirname, '../HmzkAdmin'),
     assetsSubDirectory: 'static',
 
     /**

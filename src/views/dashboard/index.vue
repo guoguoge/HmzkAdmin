@@ -349,7 +349,7 @@ export default {
       this.cateId = row.id
       this.num = 2
       this.show = true
-      this.title = '修改夺宝商品(注意:商品图片需重新上传!!!)'
+      this.title = '修改夺宝商品'
 
       this.form.category = row.category
       this.form.name = row.name
@@ -428,52 +428,45 @@ export default {
           this.fileList2.forEach((item, index) => {
             FD.append('detail_img' + index, item)
           })
-          if (this.fileList[0] && this.fileList2) {
-            if (this.form.name) {
-              if (this.num == 1) { // 新增
-                AddTreasure(FD).then(res => {
-                  if (checkRequest(res, false)) {
-                    this.$message({
-                      message: '新建商品成功!',
-                      type: 'success'
-                    })
-                    this.$refs['form'].resetFields();
-                    this.fileList = []
-                    this.fileList2 = []
-                    this.init()
-                    this.show = false
-                  }
-                })
-              } else { // 修改
-                EditTreasure(FD).then(res => {
-                  if (checkRequest(res, false)) {
-                    this.$message({
-                      message: '修改商品成功!',
-                      type: 'success'
-                    })
-                    this.rowData = checkRequest(res, false)
-                    this.$refs['form'].resetFields();
-                    this.fileList = []
-                    this.fileList2 = []
-                    this.init()
-                    this.show = false
-                  } else {
-                    this.$message({
-                      message: jsonpReturn(res).msg,
-                      type: 'error'
-                    })
-                  }
-                })
-              }
-            } else {
-              this.$message({
-                message: jsonpReturn(res).msg,
-                type: 'error'
+          if (this.form.name) {
+            if (this.num == 1) { // 新增
+              AddTreasure(FD).then(res => {
+                if (checkRequest(res, false)) {
+                  this.$message({
+                    message: '新建商品成功!',
+                    type: 'success'
+                  })
+                  this.$refs['form'].resetFields();
+                  this.fileList = []
+                  this.fileList2 = []
+                  this.init()
+                  this.show = false
+                }
+              })
+            } else { // 修改
+              EditTreasure(FD).then(res => {
+                if (checkRequest(res, false)) {
+                  this.$message({
+                    message: '修改商品成功!',
+                    type: 'success'
+                  })
+                  this.rowData = checkRequest(res, false)
+                  this.$refs['form'].resetFields();
+                  this.fileList = []
+                  this.fileList2 = []
+                  this.init()
+                  this.show = false
+                } else {
+                  this.$message({
+                    message: jsonpReturn(res).msg,
+                    type: 'error'
+                  })
+                }
               })
             }
           } else {
             this.$message({
-              message: '请按确保图片上传',
+              message: jsonpReturn(res).msg,
               type: 'error'
             })
           }

@@ -12,23 +12,10 @@ import {
 } from 'element-ui'
 
 export const jsonpReturn = (data) => { // 处理jsonpReturn格式对象
-  if (data.status == 2) {
-    Store.dispatch('LogOut').then(res => {
-      Message({
-        message: '登录状态过期,请重新登陆',
-        type: 'warning',
-        showClose: true
-      })
-      router.push({
-        name: 'login'
-      })
-    })
-    return
-  } else {
-    let s = (data).replace('jsonpReturn', '')
-    s = JSON.parse(s.substring(1, s.length - 2))
-    return s
-  }
+  console.log(data);
+  let s = (data).replace('jsonpReturn', '')
+  s = JSON.parse(s.substring(1, s.length - 2))
+  return s
 }
 
 export const checkRequest = (res, usemsg) => {

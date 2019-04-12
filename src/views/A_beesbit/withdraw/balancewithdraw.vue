@@ -75,10 +75,10 @@ export default {
             color: '#8D8D8D'
           },
           cellRenderer: params => {
-            return params.data.belong == 1 ? '夺宝' : params.data.belong == 2 ? '竞猜' : '口红机';
+            return params.data.belong == 1 ? '夺宝' : params.data.belong == 2 ? '竞拍' : '口红机';
           },
           valueGetter: params => {
-            return params.data.belong == 1 ? '夺宝' : params.data.belong == 2 ? '竞猜' : '口红机';
+            return params.data.belong == 1 ? '夺宝' : params.data.belong == 2 ? '竞拍' : '口红机';
           }
         },
         {
@@ -105,10 +105,10 @@ export default {
           label: '夺宝'
         }, {
           value: '2',
-          label: '竞猜'
+          label: '竞拍'
         },
         {
-          value: '2',
+          value: '3',
           label: '口红机'
         }
       ],
