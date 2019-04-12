@@ -386,7 +386,7 @@ export default {
 
     },
     operationEdit(row, index) {
-      console.log(row,'row');
+      console.log(row, 'row');
       console.log(Date.parse(new Date(row.end)), "时间");
       this.cateId = row.id
       this.num = 2
@@ -470,13 +470,17 @@ export default {
           FD.append('start', this.form.start / 1000)
           FD.append('end', this.form.end / 1000)
           FD.append('status', this.form.status)
-          FD.append('cover_img', this.fileList[0])
+          if(this.fileList[0]){
+            FD.append('cover_img', this.fileList[0])
+          }
           if (this.num == 2) {
             FD.append('id', this.cateId)
           }
-          this.fileList2.forEach((item, index) => {
-            FD.append('detail_img[]', item)
-          })
+          if(this.fileList2.length){
+            this.fileList2.forEach((item, index) => {
+              FD.append('detail_img[]', item || '')
+            })  
+          }
           if (this.form.name) {
             if (this.num == 1) { // 新增
               AddAuction(FD).then(res => {

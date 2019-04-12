@@ -23,6 +23,17 @@ export const AgentList = (token) => {
   })
 }
 
+export const StatisticUser = (token) => {
+  // 代理商管理员列表
+  return request({
+    url: 'statistic_user',
+    method: 'post',
+    data: {
+      token: token
+    }
+  })
+}
+
 export const FreezeUser = (token, id, is_allow) => {
   // 代理商管理员列表
   return request({
