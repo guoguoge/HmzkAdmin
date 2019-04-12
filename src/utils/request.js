@@ -47,7 +47,7 @@ service.interceptors.response.use(
   //     if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
   //       // 请自行在引入 MessageBox
   //       // import { Message, MessageBox } from 'element-ui'
-  //       MessageBox.confirm('你已被登出，可以取消继续留在该页面，或者重新登录', '确定登出', {
+  //       MessageBox.confirm('您已被登出，可以取消继续留在该页面，或者重新登录', '确定登出', {
   //         confirmButtonText: '重新登录',
   //         cancelButtonText: '取消',
   //         type: 'warning'

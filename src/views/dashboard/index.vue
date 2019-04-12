@@ -32,7 +32,9 @@
         <el-row type="flex" justify="space-between" :gutter="20">
           <el-col>
             <el-form-item label="马甲中奖id(非必填)" prop="vest_user">
-              <el-input placeholder="马甲中奖id" v-model="form.vest_user" autocomplete="off"></el-input>
+              <el-select style="width:100%" v-model="form.vest_user" placeholder="马甲中奖id">
+                <el-option v-for="(item,index) in vestUserList" :key="item.id" :label="'姓名: ' + item.name + 'id: '+item.id" :value="item.id" />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col>
@@ -108,7 +110,8 @@ import {
   EditTreasure,
   DelCategory,
   ListTreasure,
-  DelTreasure
+  DelTreasure,
+  VestUser
 } from '@/api/beesbit'
 
 export default {
@@ -298,13 +301,14 @@ export default {
         }]
       },
       title: '',
-      cateId: '',
-      categoryList: [],
+      cateId: '', // 商品ID
+      categoryList: [], // 商品列表
       dialogImageUrl: '',
-      dialogVisible: false,
-      fileList: [],
-      fileList2: [],
-      num: ''
+      dialogVisible: false, //弹出框
+      fileList: [], // 封面图
+      fileList2: [], // 详情图列表
+      num: '', // 判断新建或者修改的 1为新建 2为修改
+      vestUserList: [] // 马甲用户列表
     }
   },
   computed: {
@@ -332,6 +336,13 @@ export default {
         this.form.category = this.categoryList[0].value
         console.log(checkRequest(res, false));
         console.log(typeof this.categoryList[0].value);
+      })
+      VestUser(this.token).then(res => {
+        let data = checkRequest(res, false)
+        if (data) {
+          this.vestUserList = data
+        }
+        console.log(data, '马甲用户');
       })
 
     },

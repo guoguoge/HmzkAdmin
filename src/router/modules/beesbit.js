@@ -16,24 +16,24 @@ export const orderRouter = {
     icon: 'star'
   },
   children: [{
-    path: 'neworder',
-    component: () => import('@/views/A_beesbit/order/neworder'), // Parent router-view
-    name: 'neworder',
-    meta: {
-      title: 'neworder',
-      icon: 'star'
+      path: 'neworder',
+      component: () => import('@/views/A_beesbit/order/neworder'), // Parent router-view
+      name: 'neworder',
+      meta: {
+        title: 'neworder',
+        icon: 'star'
+      }
     }
-  }
-  // {
-  //   path: 'reneworder',
-  //   component: () => import('@/views/A_beesbit/order/reneworder'), // Parent router-view
-  //   name: 'reneworder',
-  //   meta: {
-  //     title: 'reneworder',
-  //     icon: 'star'
-  //   }
-  // }
-]
+    // {
+    //   path: 'reneworder',
+    //   component: () => import('@/views/A_beesbit/order/reneworder'), // Parent router-view
+    //   name: 'reneworder',
+    //   meta: {
+    //     title: 'reneworder',
+    //     icon: 'star'
+    //   }
+    // }
+  ]
 }
 
 export const withdrawRouter = {
@@ -46,24 +46,24 @@ export const withdrawRouter = {
     icon: 'star'
   },
   children: [{
-    path: 'balancewithdraw',
-    component: () => import('@/views/A_beesbit/withdraw/balancewithdraw'), // Parent router-view
-    name: 'balancewithdraw',
-    meta: {
-      title: 'balancewithdraw',
-      icon: 'star'
+      path: 'balancewithdraw',
+      component: () => import('@/views/A_beesbit/withdraw/balancewithdraw'), // Parent router-view
+      name: 'balancewithdraw',
+      meta: {
+        title: 'balancewithdraw',
+        icon: 'star'
+      },
     }
-  } 
-  // {
-  //   path: 'earningwithdraw',
-  //   component: () => import('@/views/A_beesbit/withdraw/earningwithdraw'), // Parent router-view
-  //   name: 'earningwithdraw',
-  //   meta: {
-  //     title: 'earningwithdraw',
-  //     icon: 'star'
-  //   }
-  // }
-]
+    // {
+    //   path: 'earningwithdraw',
+    //   component: () => import('@/views/A_beesbit/withdraw/earningwithdraw'), // Parent router-view
+    //   name: 'earningwithdraw',
+    //   meta: {
+    //     title: 'earningwithdraw',
+    //     icon: 'star'
+    //   }
+    // }
+  ]
 }
 
 export const statusRouter = {
@@ -125,14 +125,15 @@ export const userRouter = {
     icon: 'star'
   },
   children: [{
-    path: 'userinfo',
-    component: () => import('@/views/A_beesbit/user/userinfo'), // Parent router-view
-    name: 'userinfo',
-    meta: {
-      title: 'userinfo',
-      icon: 'star'
+      path: 'userinfo',
+      component: () => import('@/views/A_beesbit/user/userinfo'), // Parent router-view
+      name: 'userinfo',
+      meta: {
+        title: 'userinfo',
+        icon: 'star'
+      }
     }
-  }]
+  ]
 }
 
 export const settingRouter = {

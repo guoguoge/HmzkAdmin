@@ -52,6 +52,25 @@ export const constantRouterMap = [{
       }
     }]
   },
+  {
+    path: '/',
+    component: Layout,
+    redirect: '/',
+    name: 'user',
+    meta: {
+      title: 'user',
+      icon: 'star'
+    },
+    children: [{
+        path: 'http://129.28.67.91/admin.php',
+        name: 'userinfo',
+        meta: {
+          title: '口红机后台',
+          icon: 'star'
+        }
+      }
+    ]
+  },
   userRouter,
   orderRouter,
   withdrawRouter,

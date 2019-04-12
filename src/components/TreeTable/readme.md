@@ -42,9 +42,9 @@
   2. value: 对应data的key。treeTable将显示相应的value
   3. width: 每列的宽度，为一个数字(可选)
 
-  如果你想要每个字段都有自定义的样式或者嵌套其他组件，columns可不提供，直接像在el-table一样写即可，如果没有自定义内容，提供columns将更加的便捷方便
+  如果您想要每个字段都有自定义的样式或者嵌套其他组件，columns可不提供，直接像在el-table一样写即可，如果没有自定义内容，提供columns将更加的便捷方便
 
-  如果你有几个字段是需要自定义的，几个不需要，那么可以将不需要自定义的字段放入columns，将需要自定义的内容放入到slot中，详情见后文
+  如果您有几个字段是需要自定义的，几个不需要，那么可以将不需要自定义的字段放入columns，将需要自定义的内容放入到slot中，详情见后文
   ```javascript
   [{
     value:string,
@@ -70,11 +70,11 @@
 #### evalArgs
   解析函数的参数，是一个数组
 
-  **请注意，自定义的解析函数参数第一个为this.data，第二个参数为， this.expandAll,你不需要在evalArgs填写。一定记住，这两个参数是强制性的，并且位置不可颠倒** *this.data为需要解析的数据，this.expandAll为是否默认展开*
+  **请注意，自定义的解析函数参数第一个为this.data，第二个参数为， this.expandAll,您不需要在evalArgs填写。一定记住，这两个参数是强制性的，并且位置不可颠倒** *this.data为需要解析的数据，this.expandAll为是否默认展开*
 
-  如你的解析函数需要的参数为`(this.data, this.expandAll,1,2,3,4)`，那么你只需要将`[1,2,3,4]`赋值给`evalArgs`就可以了
+  如您的解析函数需要的参数为`(this.data, this.expandAll,1,2,3,4)`，那么您只需要将`[1,2,3,4]`赋值给`evalArgs`就可以了
 
-  如果你的解析函数参数只有`(this.data, this.expandAll)`,那么就可以不用填写evalArgs了
+  如果您的解析函数参数只有`(this.data, this.expandAll)`,那么就可以不用填写evalArgs了
 
   具体可参考[*customEval.js*](https://github.com/PanJiaChen/vue-element-admin/blob/master/src/views/table/treeTable/customEval.js)的函数参数和[customTreeTable](https://github.com/PanJiaChen/vue-element-admin/blob/master/src/views/table/treeTable/customTreeTable.vue)的`evalArgs`属性值
 
