@@ -277,7 +277,6 @@ export default {
           trigger: 'blur'
         }],
         vest_user: [{
-          type: 'number',
           message: '请输入马甲中奖id',
           trigger: 'blur'
         }],
