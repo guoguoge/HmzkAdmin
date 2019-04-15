@@ -6,7 +6,7 @@
     </el-col>
   </el-row>
   <AGTable :rowData="rowData" :columnDefs="column" :defaultColDef="config" @operationDelete="operationDelete" @operationEdit="operationEdit"></AGTable>
-  <el-dialog :visible.sync="show" :title="title" width="50%" center>
+  <el-dialog :visible.sync="show" :title="title" top="5vh" width="50%" center>
     <span slot="footer" class="dialog-footer">
       <el-form status-icon ref="form" :rules="rules" :model="form" label-position="left" class="demo-ruleForm">
         <el-row type="flex" justify="space-between" :gutter="20">
@@ -24,7 +24,7 @@
           </el-col>
           <el-col>
             <el-form-item label="参与价格" prop="price">
-              <el-input-number style="width:100%" v-model="form.price" :min="0" label="请输入参与价格"></el-input-number>
+              <el-input-number style="width:100%" v-model="form.price" :min="1" label="请输入参与价格"></el-input-number>
             </el-form-item>
           </el-col>
         </el-row>
@@ -264,6 +264,12 @@ export default {
         detail_img: ''
       },
       rules: {
+        name: [{
+          type: 'string',
+          required: true,
+          message: '请输入商品名称',
+          trigger: 'blur'
+        }],
         category: [{
           type: 'number',
           required: true,
@@ -272,8 +278,9 @@ export default {
         }],
         price: [{
           type: 'number',
+          min: 1,
           required: true,
-          message: '请输入参与价格',
+          message: '请输入正确参与价格',
           trigger: 'blur'
         }],
         vest_user: [{
@@ -440,6 +447,11 @@ export default {
                   this.fileList2 = []
                   this.init()
                   this.show = false
+                } else {
+                  this.$message({
+                    message: jsonpReturn(res.data).msg,
+                    type: 'error'
+                  })
                 }
               })
             } else { // 修改
@@ -457,7 +469,7 @@ export default {
                   this.show = false
                 } else {
                   this.$message({
-                    message: jsonpReturn(res).msg,
+                    message: jsonpReturn(res.data).msg,
                     type: 'error'
                   })
                 }
@@ -465,7 +477,7 @@ export default {
             }
           } else {
             this.$message({
-              message: jsonpReturn(res).msg,
+              message: jsonpReturn(res.data).msg,
               type: 'error'
             })
           }

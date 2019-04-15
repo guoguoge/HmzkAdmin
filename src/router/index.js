@@ -43,7 +43,7 @@ export const constantRouterMap = [{
     children: [{
       path: 'dashboard',
       component: () =>
-        import('@/views/dashboard/index'),
+        import ('@/views/dashboard/index'),
       name: 'Dashboard',
       meta: {
         title: 'dashboard',
@@ -64,7 +64,7 @@ export const constantRouterMap = [{
       path: '/workbench',
       name: 'workbench',
       component: () =>
-        import('@/views/A_beesbit/workbench/workbench'),
+        import ('@/views/A_beesbit/workbench/workbench'),
       meta: {
         title: 'workbench',
         icon: 'peoples'
@@ -75,17 +75,19 @@ export const constantRouterMap = [{
   orderRouter,
   withdrawRouter,
   {
-    path: '/',
+    path: '',
     component: Layout,
-    redirect: '/',
-    name: 'user',
+    redirect: '/agent',
+    name: 'agent',
     meta: {
-      title: 'user',
+      title: 'agent',
       icon: 'star'
     },
     children: [{
-      path: 'http://129.28.67.91/admin.php',
+      path: '/agent',
       name: 'userinfo',
+      component: () =>
+        import ('@/views/A_beesbit/agent/agent'),
       meta: {
         title: '口红机后台',
         icon: 'star'
@@ -95,25 +97,25 @@ export const constantRouterMap = [{
   {
     path: '/login',
     component: () =>
-      import('@/views/login/index'),
+      import ('@/views/login/index'),
     hidden: true
   },
   {
     path: '/auth-redirect',
     component: () =>
-      import('@/views/login/authredirect'),
+      import ('@/views/login/authredirect'),
     hidden: true
   },
   {
     path: '/404',
     component: () =>
-      import('@/views/errorPage/404'),
+      import ('@/views/errorPage/404'),
     hidden: true
   },
   {
     path: '/401',
     component: () =>
-      import('@/views/errorPage/401'),
+      import ('@/views/errorPage/401'),
     hidden: true
   },
 ]
@@ -126,15 +128,14 @@ export default new Router({
   routes: constantRouterMap
 })
 
-export const asyncRouterMap = [
-  {
+export const asyncRouterMap = [{
     path: '/redirect',
     component: Layout,
     hidden: true,
     children: [{
       path: '/redirect/:path*',
       component: () =>
-        import('@/views/redirect/index')
+        import ('@/views/redirect/index')
     }]
   },
 
@@ -162,7 +163,7 @@ export const agentRouterMap = [{
     path: '/workbench',
     name: 'workbench',
     component: () =>
-      import('@/views/A_beesbit/workbench/workbench'),
+      import ('@/views/A_beesbit/workbench/workbench'),
     meta: {
       title: 'workbench',
       icon: 'peoples'
