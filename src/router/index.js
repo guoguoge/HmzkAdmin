@@ -85,12 +85,12 @@ export const constantRouterMap = [{
     },
     children: [{
       path: '/agent',
-      name: 'userinfo',
+      name: 'agent',
       component: () =>
         import ('@/views/A_beesbit/agent/agent'),
       meta: {
         title: '口红机后台',
-        icon: 'star'
+        icon: 'people'
       }
     }]
   },
