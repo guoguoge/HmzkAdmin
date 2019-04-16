@@ -1,6 +1,6 @@
 <template>
 <div class="">
-  <article-detail :content="content" :type="type" @publish="publish" :is-edit="true" />
+  <article-detail ref="article" :content="content" :type="type" @publish="publish" :is-edit="true" />
 </div>
 </template>
 
@@ -46,10 +46,11 @@ export default {
   watch: {
     articleData: {
       handler: function(val) {
-        console.log(this.content);
         this.content = val
+        console.log(this.content);
       },
-      deep: true
+      deep: true,
+      immediate: true
     }
   },
   components: {
@@ -57,10 +58,12 @@ export default {
   },
   methods: {
     init() {
-
     },
     publish(val, title) {
       this.$emit('closeArticle', val)
+    },
+    clear() {
+      this.$refs.article.clear()
     }
   },
   created() {},

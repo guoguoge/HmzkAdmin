@@ -1,10 +1,10 @@
 <template>
-  <div :class="{fullscreen:fullscreen}" class="tinymce-container editor-container">
-    <textarea :id="tinymceId" class="tinymce-textarea"/>
-    <div class="editor-custom-btn-container">
-      <editorImage color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK"/>
-    </div>
+<div :class="{fullscreen:fullscreen}" class="tinymce-container editor-container">
+  <textarea :id="tinymceId" class="tinymce-textarea" />
+  <div class="editor-custom-btn-container">
+    <editorImage color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK" />
   </div>
+</div>
 </template>
 
 <script>
@@ -14,7 +14,9 @@ import toolbar from './toolbar'
 
 export default {
   name: 'Tinymce',
-  components: { editorImage },
+  components: {
+    editorImage
+  },
   props: {
     id: {
       type: String,
@@ -29,7 +31,7 @@ export default {
     toolbar: {
       type: Array,
       required: false,
-      default() {
+      default () {
         return []
       }
     },
@@ -62,6 +64,8 @@ export default {
   },
   watch: {
     value(val) {
+      const tinymce = window.tinymce.get(this.tinymceId)
+      tinymce.setContent(this.value)
       if (!this.hasChange && this.hasInit) {
         this.$nextTick(() =>
           window.tinymce.get(this.tinymceId).setContent(val || ''))
@@ -178,8 +182,9 @@ export default {
         window.tinymce.get(_this.tinymceId).insertContent(`<img class="wscnph" src="${v.url}" >`)
       })
     },
-    clear(){
-      window.tinymce.activeEditor.setContent("");
+    clear() {
+      const tinymce = window.tinymce.get(this.tinymceId)
+      tinymce.setContent(this.value)
     },
   }
 }
@@ -190,23 +195,28 @@ export default {
   position: relative;
   line-height: normal;
 }
+
 .tinymce-container>>>.mce-fullscreen {
   z-index: 10000;
 }
+
 .tinymce-textarea {
   visibility: hidden;
   z-index: -1;
 }
+
 .editor-custom-btn-container {
   position: absolute;
   right: 4px;
   top: 4px;
   /*z-index: 2005;*/
 }
+
 .fullscreen .editor-custom-btn-container {
   z-index: 10000;
   position: fixed;
 }
+
 .editor-upload-btn {
   display: inline-block;
 }

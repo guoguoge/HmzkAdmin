@@ -6,28 +6,23 @@
         <div slot="header" class="clearfix">
           <span>夺宝规则</span>
           <el-button type="success" style="float: right" size="mini" @click.native="EditNotice(1)">修改夺宝规则</el-button>
-          <!-- <el-button type="danger" style="float: right;margin-right:1rem" size="mini">删除规则</el-button> -->
         </div>
-        <div v-html="ruleD">
-        </div>
+        <div v-html="ruleD"></div>
       </el-card>
     </el-col>
     <el-col :span="12">
       <el-card class="box-card">
         <div slot="header" class="clearfix">
           <span>竞拍规则</span>
-          <el-button type="success" style="float: right" size="mini" @click.native="EditNotice(1)">修改竞拍规则</el-button>
-          <!-- <el-button type="danger" style="float: right;margin-right:1rem" size="mini">删除规则</el-button> -->
+          <el-button type="success" style="float: right" size="mini" @click.native="EditNotice(2)">修改竞拍规则</el-button>
         </div>
-        <div v-for="o in 4" :key="o" class="text item">
-          {{'列表内容 ' + o }}
-        </div>
+        <div v-html="ruleJ"></div>
       </el-card>
     </el-col>
   </el-row>
 
   <el-dialog :visible.sync="show" :title="dialogTitle" width="50%" center top="5vh">
-    <Article :articleData="articleData" :type="2" @closeArticle="reflash" />
+    <Article ref="article" :articleData="articleData" :type="2" @closeArticle="reflash" />
   </el-dialog>
 </div>
 </template>
@@ -81,12 +76,20 @@ export default {
   methods: {
     init() {
       SeeRule(this.token, 4).then(res => {
+        let arrD = []
+        let arrJ = []
         let data = checkRequest(res, false)
-        this.ruleD = data[0].rules
-        this.ruleDid = data[0].id
-
-        this.ruleJ = data[0].rules
-        this.ruleJid = data[0].rules
+        data.forEach(item => {
+          if (item.type == 1) {
+            arrD.push(item)
+          } else {
+            arrJ.push(item)
+          }
+        })
+        this.ruleD = arrD[0].rules
+        this.ruleDid = arrD[0].id
+        this.ruleJ = arrJ[0].rules
+        this.ruleJid = arrJ[0].id
       })
     },
     operationEdit(row, index) {
@@ -102,23 +105,14 @@ export default {
         }
       })
     },
-    operationDelete(row, index) {
-      NewsDel(
-        this.token,
-        row.id).then(res => {
-        checkRequest(res, true)
-        this.show = false
-        this.init()
-      })
-    },
     EditNotice(num) {
       this.type = num
       if (num == 1) {
-        this.dialogTitle = '更新夺宝规则'
+        this.dialogTitle = '修改夺宝规则'
         this.articleData = this.ruleD
         console.log(this.articleData);
       } else {
-        this.dialogTitle = '更新竞拍规则'
+        this.dialogTitle = '修改竞拍规则'
         this.articleData = this.ruleJ
       }
       this.show = true
@@ -129,13 +123,16 @@ export default {
         val,
         3,
         this.type,
-        this.ruleDid
+        this.type == 1 ? this.ruleDid : this.ruleJid
       ).then(res => {
         if (checkRequest(res, true)) {
           this.show = false
           this.init()
         }
       })
+    },
+    close() {
+      this.$refs.article.clear()
     }
   },
   created() {

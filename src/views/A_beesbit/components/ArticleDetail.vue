@@ -137,11 +137,15 @@ export default {
     }
   },
   watch: {
-    content: function(val) {
-      this.postForm.content = val
-      this.oldContent = val
-      console.log(val);
-      console.log(this.postForm.content);
+    content: {
+      handler(val) {
+        this.postForm.content = val
+        this.oldContent = val
+        console.log(val);
+        console.log(this.postForm.content);
+      },
+      deep: true,
+      immediate: true
     },
     title: function(val) {
       this.postForm.title = val
@@ -186,6 +190,9 @@ export default {
       }
 
     },
+    clear() {
+      this.$refs.editor.clear()
+    }
   }
 }
 </script>
