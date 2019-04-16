@@ -4,7 +4,7 @@ export default {
    自定义的路由名
      */
 
-    agent: '代理商控制台',
+    agent: '管理页面',
     workbench: '竞拍管理',
     order: '用户订单',
     neworder: '用户马甲管理',
@@ -15,7 +15,7 @@ export default {
     status: '运行信息列表',
     millorder: '矿机订单',
     mills: '机器列表',
-    notice: '公告列表',
+    notice: '前台规则管理',
     edit: '编辑公告',
     user: '用户详情',
     userinfo: '用户列表',

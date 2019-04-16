@@ -177,7 +177,10 @@ export default {
       arr.forEach(v => {
         window.tinymce.get(_this.tinymceId).insertContent(`<img class="wscnph" src="${v.url}" >`)
       })
-    }
+    },
+    clear(){
+      window.tinymce.activeEditor.setContent("");
+    },
   }
 }
 </script>

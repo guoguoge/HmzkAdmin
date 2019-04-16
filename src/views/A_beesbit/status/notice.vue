@@ -1,10 +1,31 @@
 <template>
 <div class="app-container">
-  <AGTable :rowData="rowData" :columnDefs="column" :defaultColDef="config" @operationDelete="operationDelete" @operationEdit="operationEdit">
-    <template slot="notice" slot-scope="props">
-      <el-button class="beesbit-sec-btn" @click.native="addNotice">新建公告</el-button>
-    </template>
-  </AGTable>
+  <el-row type="flex" justify="space-between" :gutter="20" align="middle">
+    <el-col :span="12">
+      <el-card class="box-card">
+        <div slot="header" class="clearfix">
+          <span>夺宝规则</span>
+          <el-button type="success" style="float: right" size="mini" @click.native="EditNotice(1)">修改夺宝规则</el-button>
+          <!-- <el-button type="danger" style="float: right;margin-right:1rem" size="mini">删除规则</el-button> -->
+        </div>
+        <div v-html="ruleD">
+        </div>
+      </el-card>
+    </el-col>
+    <el-col :span="12">
+      <el-card class="box-card">
+        <div slot="header" class="clearfix">
+          <span>竞拍规则</span>
+          <el-button type="success" style="float: right" size="mini" @click.native="EditNotice(1)">修改竞拍规则</el-button>
+          <!-- <el-button type="danger" style="float: right;margin-right:1rem" size="mini">删除规则</el-button> -->
+        </div>
+        <div v-for="o in 4" :key="o" class="text item">
+          {{'列表内容 ' + o }}
+        </div>
+      </el-card>
+    </el-col>
+  </el-row>
+
   <el-dialog :visible.sync="show" :title="dialogTitle" width="50%" center top="5vh">
     <Article :articleData="articleData" :type="2" @closeArticle="reflash" />
   </el-dialog>
@@ -28,77 +49,24 @@ import {
   NewsList,
   NewsAdd,
   NewsDel,
-  NewsEdit
+  NewsEdit,
+  AddRule,
+  DelRule,
+  EditRule,
+  SeeRule
 } from '@/api/beesbit'
 
 export default {
   data() {
     return {
-      dialogTitle: '新建公告',
-      rowData: [], //表格源数据
-      column: [{
-          headerName: '公告ID',
-          field: 'id',
-          cellStyle: {
-            color: '#8D8D8D'
-          },
-        },
-        {
-          headerName: '公告标题',
-          field: 'title',
-          cellStyle: {
-            color: '#8D8D8D'
-          },
-          width: 580
-        },
-        {
-          headerName: '公告内容',
-          field: 'body',
-          cellRendererFramework: 'detailsButton',
-          // cellRenderer: params => {
-          //   let data = params.data.body.replace(/&lt;/g, "<")
-          //   let data1 = data.replace(/&nbsp;/g, " ")
-          //   let data2 = data1.replace(/&gt;/g, ">")
-          //   return data2
-          // },
-          valueGetter: params => {
-            let data = params.data.body.replace(/&lt;/g, "<")
-            let data1 = data.replace(/&nbsp;/g, " ")
-            let data2 = data1.replace(/&gt;/g, ">")
-            return data2
-          },
-          cellStyle: {
-            color: '#8D8D8D'
-          },
-          pinned: 'right',
-          width: 180
-        },
-        {
-          headerName: '发布时间',
-          field: 'time',
-          cellStyle: {
-            color: '#8D8D8D'
-          },
-        },
-        {
-          headerName: '操作',
-          field: '',
-          cellRendererFramework: 'statusButton',
-          cellStyle: {
-            color: '#8D8D8D'
-          },
-          pinned: 'right',
-        },
-      ],
-      config: {
-        width: 200,
-        sortable: true,
-        resizable: true,
-        filter: true,
-        search: true,
-      },
+      dialogTitle: '新建规则',
       show: false,
-      articleData: {}
+      articleData: '',
+      ruleD: '',
+      ruleDid: '',
+      ruleJ: '',
+      ruleJid: '',
+      type: 1 // 1为夺宝 2为竞拍
     }
   },
   computed: {
@@ -112,12 +80,17 @@ export default {
   },
   methods: {
     init() {
-      NewsList(this.token).then(res => {
-        this.rowData = checkRequest(res, false)
+      SeeRule(this.token, 4).then(res => {
+        let data = checkRequest(res, false)
+        this.ruleD = data[0].rules
+        this.ruleDid = data[0].id
+
+        this.ruleJ = data[0].rules
+        this.ruleJid = data[0].rules
       })
     },
     operationEdit(row, index) {
-      this.dialogTitle = '编辑公告'
+      this.dialogTitle = '编辑规则'
       this.articleData = row
       this.show = true
       this.$router.push({
@@ -138,13 +111,31 @@ export default {
         this.init()
       })
     },
-    addNotice() {
-      this.dialogTitle = '新建公告'
+    EditNotice(num) {
+      this.type = num
+      if (num == 1) {
+        this.dialogTitle = '更新夺宝规则'
+        this.articleData = this.ruleD
+        console.log(this.articleData);
+      } else {
+        this.dialogTitle = '更新竞拍规则'
+        this.articleData = this.ruleJ
+      }
       this.show = true
     },
-    reflash() {
-      this.show = false
-      this.init()
+    reflash(val) {
+      EditRule(
+        this.token,
+        val,
+        3,
+        this.type,
+        this.ruleDid
+      ).then(res => {
+        if (checkRequest(res, true)) {
+          this.show = false
+          this.init()
+        }
+      })
     }
   },
   created() {
@@ -156,4 +147,7 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
+.el-card__header {
+    .clearfix {}
+}
 </style>

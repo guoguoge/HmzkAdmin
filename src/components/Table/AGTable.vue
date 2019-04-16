@@ -138,7 +138,7 @@ export default {
       rowSelection: null, //表格已选择项目
       currentPage: 1, //分页当前页数
       pageSize: null, //分页总显示页数
-      loading: false, //loading特效开关
+      loading: true, //loading特效开关
       localeText:null, //中文化
     }
   },
@@ -149,7 +149,17 @@ export default {
   },
   watch: {
     rowData(val, old) {
-      this.gridOptions.rowData = val
+      if(val){
+        this.gridOptions.rowData = val
+        this.loading = false
+      }else{
+        this.loading = false
+        this.$message({
+          showClose: true,
+          message: '暂无数据!',
+          type: 'error'
+        });
+      }
     }
   },
   methods: {

@@ -2,7 +2,7 @@
 <div class="createPost-container">
   <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container">
     <div class="createPost-main-container">
-      <el-row>
+      <!-- <el-row>
 
         <el-col :span="24">
           <el-form-item v-if="type != 1" style="margin-bottom: 40px;" prop="title">
@@ -11,7 +11,7 @@
             </MDinput>
           </el-form-item>
         </el-col>
-      </el-row>
+      </el-row> -->
 
       <el-form-item prop="content" style="margin-bottom: 30px;">
         <Tinymce ref="editor" :height="400" v-model="postForm.content" />
@@ -160,13 +160,13 @@ export default {
       if (!Check) {
         this.$refs.postForm.validate(valid => {
           if (valid) {
-            console.log((this.postForm.content).trim());
             if ((this.postForm.content).trim()) {
               this.loading = true
-              this.$emit('publish', this.postForm.content, this.postForm.title ? this.postForm.title : null)
+              this.$emit('publish', this.postForm.content)
               this.postForm.content = ''
               this.postForm.title = ''
               this.loading = false
+              this.$refs.editor.clear()
             } else {
               this.$message({
                 message: '合同不能为空',

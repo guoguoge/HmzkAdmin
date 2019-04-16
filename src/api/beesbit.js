@@ -219,6 +219,77 @@ export const ACate = (token) => {
   })
 }
 
+export const AddRule = (token, rules, type, method) => {
+  // 竞拍商品分类
+  return request({
+    url: 'rule',
+    method: 'post',
+    data: {
+      token: token,
+      rules: rules,
+      type: type,
+      method: method
+    }
+  })
+}
+
+export const DelRule = (token, method, rule_id) => {
+  // 规则--删除规则
+  return request({
+    url: 'rule',
+    method: 'post',
+    data: {
+      token: token,
+      rules: rules,
+      rule_id: rule_id
+    }
+  })
+}
+
+export const EditRule = (token, rules, method, type, rule_id) => {
+  // 规则--删除规则
+  return request({
+    url: 'rule',
+    method: 'post',
+    data: {
+      token: token,
+      rules: rules,
+      method: method,
+      type: type,
+      rule_id: rule_id,
+    }
+  })
+}
+
+export const SeeRule = (token, method) => {
+  // 规则--删除规则
+  return request({
+    url: 'rule',
+    method: 'post',
+    data: {
+      token: token,
+      method: method
+    }
+  })
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

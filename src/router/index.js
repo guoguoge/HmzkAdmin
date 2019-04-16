@@ -43,7 +43,7 @@ export const constantRouterMap = [{
     children: [{
       path: 'dashboard',
       component: () =>
-        import ('@/views/dashboard/index'),
+        import('@/views/dashboard/index'),
       name: 'Dashboard',
       meta: {
         title: 'dashboard',
@@ -64,7 +64,7 @@ export const constantRouterMap = [{
       path: '/workbench',
       name: 'workbench',
       component: () =>
-        import ('@/views/A_beesbit/workbench/workbench'),
+        import('@/views/A_beesbit/workbench/workbench'),
       meta: {
         title: 'workbench',
         icon: 'peoples'
@@ -84,38 +84,59 @@ export const constantRouterMap = [{
       icon: 'star'
     },
     children: [{
-      path: '/agent',
-      name: 'agent',
-      component: () =>
-        import ('@/views/A_beesbit/agent/agent'),
-      meta: {
-        title: '口红机后台',
-        icon: 'people'
-      }
-    }]
+        path: '/agent',
+        name: 'agent',
+        component: () =>
+          import('@/views/A_beesbit/agent/agent'),
+        meta: {
+          title: '口红机后台',
+          icon: 'people'
+        }
+      },
+      {
+        path: 'notice',
+        component: () => import('@/views/A_beesbit/status/notice'), // Parent router-view
+        name: 'notice',
+        meta: {
+          title: 'notice',
+          icon: 'star',
+          noCache: true
+        }
+      },
+      {
+        path: 'edit/:id(\\d+)',
+        component: () => import('@/views/A_beesbit/status/edit'), // Parent router-view
+        name: 'edit',
+        meta: {
+          title: 'edit',
+          icon: 'star'
+        },
+        hidden: true
+      },
+    ]
   },
   {
     path: '/login',
     component: () =>
-      import ('@/views/login/index'),
+      import('@/views/login/index'),
     hidden: true
   },
   {
     path: '/auth-redirect',
     component: () =>
-      import ('@/views/login/authredirect'),
+      import('@/views/login/authredirect'),
     hidden: true
   },
   {
     path: '/404',
     component: () =>
-      import ('@/views/errorPage/404'),
+      import('@/views/errorPage/404'),
     hidden: true
   },
   {
     path: '/401',
     component: () =>
-      import ('@/views/errorPage/401'),
+      import('@/views/errorPage/401'),
     hidden: true
   },
 ]
@@ -135,7 +156,7 @@ export const asyncRouterMap = [{
     children: [{
       path: '/redirect/:path*',
       component: () =>
-        import ('@/views/redirect/index')
+        import('@/views/redirect/index')
     }]
   },
 
@@ -163,7 +184,7 @@ export const agentRouterMap = [{
     path: '/workbench',
     name: 'workbench',
     component: () =>
-      import ('@/views/A_beesbit/workbench/workbench'),
+      import('@/views/A_beesbit/workbench/workbench'),
     meta: {
       title: 'workbench',
       icon: 'peoples'
