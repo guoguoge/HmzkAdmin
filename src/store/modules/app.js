@@ -9,7 +9,8 @@ const app = {
     device: 'desktop',
     language: 'zh',
     size: Cookies.get('size') || 'medium',
-    width: document.body.clientWidth > 375
+    width: document.body.clientWidth > 375,
+    url: 'http://129.28.67.91/Hmzk/public/'
   },
   mutations: {
     TOGGLE_SIDEBAR: state => {

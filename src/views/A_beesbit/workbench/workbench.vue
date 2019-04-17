@@ -7,7 +7,7 @@
   <AGTable :rowData="rowData" :columnDefs="column" :defaultColDef="config" @operationDelete="operationDelete" @operationEdit="operationEdit"></AGTable>
 
   <el-dialog title="修改竞拍款退还比例" :visible.sync="visible" center width="20%">
-    <el-input-number style="width:100%"  v-model="refund" :precision="0" :min="1" :max="99" label="请输入退还比例(1-100)" clearable></el-input-number>
+    <el-input-number style="width:100%" v-model="refund" :precision="0" :min="1" :max="99" label="请输入退还比例(1-100)" clearable></el-input-number>
     <el-button style="marginTop:1rem;width:100%" type="primary" @click.native="serRefund">确定</el-button>
   </el-dialog>
 
@@ -42,7 +42,7 @@
 
         <el-row type="flex" justify="space-between" :gutter="20">
           <el-col>
-            <el-form-item label="马甲中奖id(非必填)" prop="vest_user">
+            <el-form-item label="马甲中奖id(非必填)">
               <el-select style="width:100%" v-model="form.vest_user" placeholder="马甲中奖人(非必填)">
                 <el-option v-for="(item,index) in vestUserList" :key="index" :label="item.name" :value="String(item.id)" />
               </el-select>
@@ -74,20 +74,28 @@
           </el-col>
         </el-row>
 
+
         <el-form-item>
-          <el-upload class="upload-demo" action="#" :multiple="false" :limit="1" :before-upload="handleUpload" :file-list="fileList">
+          <el-upload class="upload-demo" action="#" :multiple="false" :limit="1" :before-upload="handleUpload">
             <el-button size="small" type="primary">点击上传</el-button>
-            <div slot="tip" class="el-upload__tip">封面图</div>
+            <div slot="tip" class="el-upload__tip">{{num == 1? '请上传封面图':'选择图片则替换封面图,不操作则不做改变'}}</div>
           </el-upload>
         </el-form-item>
+
+        <div class="exhibition">
+          <img ref="img" :src="form.cover_img?'http://' + form.cover_img:'http://pic.baike.soso.com/p/20140611/20140611145529-1600143101.jpg'" width="100%">
+        </div>
 
         <el-form-item>
           <el-upload class="upload-demo" action="#" :before-upload="handleUpload2" :file-list="fileList2">
             <el-button size="small" type="primary">点击上传</el-button>
-            <div slot="tip" class="el-upload__tip">详情图</div>
+            <div slot="tip" class="el-upload__tip">{{num == 1? '请上传详情图':'选择图片则替换之前所有的详情图,不操作则不做改变'}}</div>
           </el-upload>
         </el-form-item>
 
+        <div class="exhibition" v-if="num == 2 && check">
+          <img v-for="(item,index) in form.detail_img" :src="'http://'+item" width="100%">
+        </div>
 
       </el-form>
       <el-button size="large" style="width:100%;" type="primary" @click="submit">确 定</el-button>
@@ -288,7 +296,7 @@ export default {
         end: '', // 结束时间
         status: 1,
         cover_img: '',
-        detail_img: ''
+        detail_img: []
       },
       rules: {
         name: [{
@@ -359,12 +367,13 @@ export default {
       vestUserList: [], // 马甲用户列表
       visible: false, // 控制比例返还
       refund: '',
-
+      check: true
     }
   },
   computed: {
     ...mapGetters([
-      'token'
+      'token',
+      'url'
     ])
   },
   components: {
@@ -372,6 +381,7 @@ export default {
   },
   methods: {
     init() {
+      this.check = true
       AuctionList(this.token, 4).then(res => {
         this.rowData = checkRequest(res, false)
         console.log(this.rowData);
@@ -401,7 +411,6 @@ export default {
         }
         console.log(this.refund);
       })
-
     },
     operationEdit(row, index) {
       console.log(row, 'row');
@@ -414,12 +423,15 @@ export default {
 
       this.form.category = row.cate_id
       this.form.name = row.name
-      this.form.price = row.price
+      this.form.vest_price = row.vest_price
       this.form.vest_user = row.vest_user
       this.form.hot = row.hot
       this.form.start = Date.parse(new Date(row.start))
       this.form.end = Date.parse(new Date(row.end))
       this.form.status = row.status
+
+      this.form.cover_img = row.cover_img
+      this.form.detail_img = row.detail_img
     },
     operationDelete(row, index) {
 
@@ -448,12 +460,26 @@ export default {
     // },
     handleUpload(file) {
       console.log(file);
+      this.img = file
+      let img = this.$refs.img
+      let freader = new FileReader();
+      freader.readAsDataURL(file);
+      freader.onload = function(e) {
+        img.setAttribute('src', e.target.result);
+      }
       this.fileList = []
       this.fileList.push(file)
       return false
     },
     handleUpload2(file) {
       console.log(file);
+      if (this.num == 2) {
+        this.check = false
+        this.$message({
+          message: '您已修改详情图,将替换之前的详情图!',
+          type: 'warning'
+        })
+      }
       this.fileList2.push(file)
       return false
     },
@@ -526,7 +552,6 @@ export default {
                     message: '修改商品成功!',
                     type: 'success'
                   })
-                  this.rowData = checkRequest(res, false)
                   this.$refs['form'].resetFields();
                   this.fileList = []
                   this.fileList2 = []
@@ -571,4 +596,12 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
+.exhibition {
+    display: flex;
+    justify-content: center;
+    img {
+        width: 10rem;
+        height: 10rem;
+    }
+}
 </style>

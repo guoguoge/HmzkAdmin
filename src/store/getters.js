@@ -6,6 +6,7 @@ const getters = {
   sidebar: state => state.app.sidebar,
   language: state => state.app.language,
   size: state => state.app.size,
+  url: state => state.app.url,
   width: width => width.app.width,
   device: state => state.app.device,
   visitedViews: state => state.tagsView.visitedViews,
