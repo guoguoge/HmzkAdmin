@@ -1,11 +1,17 @@
 <template>
 <div class="app-container">
-  <el-row type="flex" justify="end">
-    <el-col :span="4" style="text-align:right;marginBottom:1rem">
-      <el-button type="primary" @click="showDialog(1)"><i class="el-icon-circle-plus"></i> 新增竞拍商品</el-button>
-    </el-col>
+  <el-row type="flex" justify="end" style="marginBottom:1rem">
+    <el-button type="primary" @click="showDialog(1)"><i class="el-icon-circle-plus"></i> 新增竞拍商品</el-button>
+    <el-button type="primary" @click="visible = true">修改退款比例 当前 {{refund}} %</el-button>
   </el-row>
   <AGTable :rowData="rowData" :columnDefs="column" :defaultColDef="config" @operationDelete="operationDelete" @operationEdit="operationEdit"></AGTable>
+
+  <el-dialog title="修改竞拍款退还比例" :visible.sync="visible" center width="20%">
+    <el-input-number style="width:100%"  v-model="refund" :precision="0" :min="1" :max="99" label="请输入退还比例(1-100)" clearable></el-input-number>
+    <el-button style="marginTop:1rem;width:100%" type="primary" @click.native="serRefund">确定</el-button>
+  </el-dialog>
+
+
   <el-dialog :visible.sync="show" :title="title" width="70%" center>
     <span slot="footer" class="dialog-footer">
       <el-form status-icon ref="form" :rules="rules" :model="form" label-position="left" class="demo-ruleForm">
@@ -116,7 +122,9 @@ import {
   DelTreasure,
   VestUser,
   AuctionList,
-  ChangeAuction
+  ChangeAuction,
+  SetRefund,
+  Refund
 } from '@/api/beesbit'
 
 export default {
@@ -348,7 +356,10 @@ export default {
       fileList: [], // 封面图
       fileList2: [], // 详情图列表
       num: '', // 判断新建或者修改的 1为新建 2为修改
-      vestUserList: [] // 马甲用户列表
+      vestUserList: [], // 马甲用户列表
+      visible: false, // 控制比例返还
+      refund: '',
+
     }
   },
   computed: {
@@ -382,6 +393,13 @@ export default {
           this.vestUserList = data
         }
         console.log(data, '马甲用户');
+      })
+      Refund(this.token).then(res => {
+        let data = checkRequest(res, false)
+        if (data) {
+          this.refund = data.refund
+        }
+        console.log(this.refund);
       })
 
     },
@@ -470,16 +488,16 @@ export default {
           FD.append('start', this.form.start / 1000)
           FD.append('end', this.form.end / 1000)
           FD.append('status', this.form.status)
-          if(this.fileList[0]){
+          if (this.fileList[0]) {
             FD.append('cover_img', this.fileList[0])
           }
           if (this.num == 2) {
             FD.append('id', this.cateId)
           }
-          if(this.fileList2.length){
+          if (this.fileList2.length) {
             this.fileList2.forEach((item, index) => {
               FD.append('detail_img[]', item || '')
-            })  
+            })
           }
           if (this.form.name) {
             if (this.num == 1) { // 新增
@@ -533,6 +551,13 @@ export default {
             message: '请按要求填写表单',
             type: 'warning'
           })
+        }
+      })
+    },
+    serRefund() { // 设置返还比例
+      SetRefund(this.token, this.refund).then(res => {
+        if (checkRequest(res, true)) {
+          this.visible = false
         }
       })
     }

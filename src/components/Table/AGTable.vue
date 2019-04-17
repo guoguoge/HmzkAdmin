@@ -3,7 +3,7 @@
   <el-row v-if="defaultColDef.search" style="margin-bottom:1rem" type="flex" justify="space-between" :gutter="20">
     <!-- 搜索框 -->
     <el-col :span="4">
-      <el-input v-model="input" placeholder="关键词搜索" @input="filter" prefix-icon="el-icon-search">
+      <el-input v-model="input" placeholder="关键词搜索" @input="filter" prefix-icon="el-icon-search" clearable>
       </el-input>
     </el-col>
     <!-- 导出表格 -->

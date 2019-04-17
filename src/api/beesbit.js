@@ -273,19 +273,29 @@ export const SeeRule = (token, method) => {
   })
 }
 
+export const SetRefund = (token, refund) => {
+  // 规则--删除规则
+  return request({
+    url: 'setRefund',
+    method: 'post',
+    data: {
+      token: token,
+      refund: refund
+    }
+  })
+}
 
 
-
-
-
-
-
-
-
-
-
-
-
+export const Refund = (token) => {
+  // 规则--删除规则
+  return request({
+    url: 'aRefund',
+    method: 'post',
+    data: {
+      token: token
+    }
+  })
+}
 
 
 
