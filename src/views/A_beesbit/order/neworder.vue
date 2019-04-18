@@ -1,9 +1,8 @@
 <template>
 <div class="app-container">
-  <el-row type="flex" justify="end">
-    <el-col :span="4" style="text-align:right;marginBottom:1rem">
-      <el-button type="primary" @click="visible  = true"><i class="el-icon-circle-plus"></i> 新增马甲用户</el-button>
-    </el-col>
+  <el-row style="marginBottom:1rem" type="flex" justify="end">
+    <el-button type="primary" @click="visible  = true"><i class="el-icon-circle-plus"></i> 新增马甲用户</el-button>
+    <el-button type="success" @click="visible  = true"><i class="el-icon-circle-plus"></i> 批量导入</el-button>
   </el-row>
   <AGTable :rowData="rowData" :columnDefs="column" :defaultColDef="config" @financChack="financChack"></AGTable>
   <el-dialog :visible.sync="show" title="修改公告" width="30%" center>

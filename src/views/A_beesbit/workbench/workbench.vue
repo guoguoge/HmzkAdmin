@@ -2,7 +2,7 @@
 <div class="app-container">
   <el-row type="flex" justify="end" style="marginBottom:1rem">
     <el-button type="primary" @click="showDialog(1)"><i class="el-icon-circle-plus"></i> 新增竞拍商品</el-button>
-    <el-button type="primary" @click="visible = true">修改退款比例 当前 {{refund}} %</el-button>
+    <el-button type="success" @click="visible = true">修改退款比例 当前 {{refund}} %</el-button>
   </el-row>
   <AGTable :rowData="rowData" :columnDefs="column" :defaultColDef="config" @operationDelete="operationDelete" @operationEdit="operationEdit"></AGTable>
 

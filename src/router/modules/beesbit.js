@@ -55,11 +55,11 @@ export const withdrawRouter = {
       },
     }
     // {
-    //   path: 'earningwithdraw',
-    //   component: () => import('@/views/A_beesbit/withdraw/earningwithdraw'), // Parent router-view
-    //   name: 'earningwithdraw',
+    //   path: 'bannerManager',
+    //   component: () => import('@/views/A_beesbit/withdraw/bannerManager'), // Parent router-view
+    //   name: 'bannerManager',
     //   meta: {
-    //     title: 'earningwithdraw',
+    //     title: 'bannerManager',
     //     icon: 'star'
     //   }
     // }
