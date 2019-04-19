@@ -19,14 +19,13 @@ export default {
     edit: '编辑公告',
     user: '用户详情',
     userinfo: '用户列表',
-    userdata: '奖品管理',
+    userdata: '中奖奖品管理',
     setting: '基础设置',
     combo: '套餐设定',
     coupon: '优惠券设定',
     collection: '收款设定',
     service: '客服信息',
     limit: '权限管理',
-
     /*
    自定义的路由名
      */

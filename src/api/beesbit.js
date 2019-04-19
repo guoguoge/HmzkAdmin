@@ -297,6 +297,17 @@ export const Refund = (token) => {
   })
 }
 
+export const AwardList = (token) => {
+  // 奖品--奖品列表
+  return request({
+    url: 'award_list',
+    method: 'post',
+    data: {
+      token: token
+    }
+  })
+}
+
 
 
 

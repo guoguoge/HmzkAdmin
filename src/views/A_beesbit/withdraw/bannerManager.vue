@@ -5,24 +5,65 @@
       <el-card class="box-card">
         <div slot="header" class="clearfix">
           <span>夺宝轮播管理</span>
-          <el-button type="success" style="float: right" size="mini" @click.native="EditNotice(1)">修改夺宝规则</el-button>
+          <el-button type="success" style="float: right" size="mini" @click.native="EditNotice(1)">新增夺宝轮播图 + </el-button>
         </div>
-        <div v-html="ruleD"></div>
+        <el-row :gutter="20">
+          <el-col :span="12" v-for="(item,index) in 2">
+            <div class="bannerBox">
+              <img src="https://wx2.sinaimg.cn/mw690/737af861gy1g1vfkpi99xj20eg0kg16q.jpg" width="100%">
+              <div class="mask">
+                <el-button icon="el-icon-search" circle></el-button>
+                <el-button icon="el-icon-edit" circle></el-button>
+                <el-button icon="el-icon-delete" circle></el-button>
+              </div>
+            </div>
+          </el-col>
+        </el-row>
       </el-card>
     </el-col>
     <el-col :span="12">
       <el-card class="box-card">
         <div slot="header" class="clearfix">
           <span>竞拍轮播管理</span>
-          <el-button type="success" style="float: right" size="mini" @click.native="EditNotice(2)">修改竞拍规则</el-button>
+          <el-button type="success" style="float: right" size="mini" @click.native="EditNotice(2)">新增竞拍轮播图 + </el-button>
         </div>
-        <div v-html="ruleJ"></div>
+        <el-row :gutter="20">
+          <el-col :span="12" v-for="(item,index) in 2">
+            <div class="bannerBox">
+              <img src="https://wx3.sinaimg.cn/mw690/737af861gy1g1vhenxo1ej20eg0kgtt0.jpgs" width="100%">
+              <div class="mask">
+                <el-button icon="el-icon-search" circle></el-button>
+                <el-button icon="el-icon-edit" circle></el-button>
+                <el-button icon="el-icon-delete" circle></el-button>
+              </div>
+            </div>
+          </el-col>
+        </el-row>
       </el-card>
     </el-col>
   </el-row>
 
   <el-dialog :visible.sync="show" :title="dialogTitle" width="50%" center top="5vh">
-    <Article ref="article" :articleData="articleData" :type="2" @closeArticle="reflash" />
+    <el-row type="flex" justify="space-between">
+      <el-col>
+        <el-select v-model="value" clearable placeholder="请选择轮播图对应商品">
+          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+          </el-option>
+        </el-select>
+      </el-col>
+      <el-col>
+        <el-upload class="upload-demo" action="#" :multiple="false" :limit="1" :before-upload="handleUpload">
+          <el-button size="small" type="primary">点击上传</el-button>
+          <div slot="tip" class="el-upload__tip">请上传banner</div>
+        </el-upload>
+        <div class="exhibition">
+          <img src="" alt="">
+        </div>
+      </el-col>
+    </el-row>
+    <el-row style="marginTop:1rem" type="flex" justify="space-between">
+      <el-button>确 定</el-button>
+    </el-row>
   </el-dialog>
 </div>
 </template>
@@ -40,28 +81,30 @@ import {
   mapGetters
 } from 'vuex'
 
-import {
-  NewsList,
-  NewsAdd,
-  NewsDel,
-  NewsEdit,
-  AddRule,
-  DelRule,
-  EditRule,
-  SeeRule
-} from '@/api/beesbit'
+import {} from '@/api/beesbit'
 
 export default {
   data() {
     return {
-      dialogTitle: '新建规则',
+      dialogTitle: '新建轮播图',
       show: false,
-      articleData: '',
-      ruleD: '',
-      ruleDid: '',
-      ruleJ: '',
-      ruleJid: '',
-      type: 1 // 1为夺宝 2为竞拍
+      options: [{
+        value: '选项1',
+        label: '黄金糕'
+      }, {
+        value: '选项2',
+        label: '双皮奶'
+      }, {
+        value: '选项3',
+        label: '蚵仔煎'
+      }, {
+        value: '选项4',
+        label: '龙须面'
+      }, {
+        value: '选项5',
+        label: '北京烤鸭'
+      }],
+      value: ''
     }
   },
   computed: {
@@ -75,65 +118,29 @@ export default {
   },
   methods: {
     init() {
-      SeeRule(this.token, 4).then(res => {
-        let arrD = []
-        let arrJ = []
-        let data = checkRequest(res, false)
-        data.forEach(item => {
-          if (item.type == 1) {
-            arrD.push(item)
-          } else {
-            arrJ.push(item)
-          }
-        })
-        this.ruleD = arrD[0].rules
-        this.ruleDid = arrD[0].id
-        this.ruleJ = arrJ[0].rules
-        this.ruleJid = arrJ[0].id
-      })
+
     },
-    operationEdit(row, index) {
-      this.dialogTitle = '编辑规则'
-      this.articleData = row
-      this.show = true
-      this.$router.push({
-        path: 'edit/' + row.id,
-        query: {
-          content: row.body,
-          title: row.title,
-          id: row.id,
-        }
-      })
-    },
+    operationEdit(row, index) {},
     EditNotice(num) {
-      this.type = num
-      if (num == 1) {
-        this.dialogTitle = '修改夺宝规则'
-        this.articleData = this.ruleD
-        console.log(this.articleData);
-      } else {
-        this.dialogTitle = '修改竞拍规则'
-        this.articleData = this.ruleJ
-      }
+
       this.show = true
     },
     reflash(val) {
-      EditRule(
-        this.token,
-        val,
-        3,
-        this.type,
-        this.type == 1 ? this.ruleDid : this.ruleJid
-      ).then(res => {
-        if (checkRequest(res, true)) {
-          this.show = false
-          this.init()
-        }
-      })
+
     },
-    close() {
-      this.$refs.article.clear()
-    }
+    handleUpload(file) {
+      console.log(file);
+      this.img = file
+      let img = this.$refs.img
+      let freader = new FileReader();
+      freader.readAsDataURL(file);
+      freader.onload = function(e) {
+        img.setAttribute('src', e.target.result);
+      }
+      this.fileList = []
+      this.fileList.push(file)
+      return false
+    },
   },
   created() {
     this.init()
@@ -144,7 +151,42 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-.el-card__header {
-    .clearfix {}
+.box-card {
+    .bannerBox {
+        border: 1px solid #ccc;
+        margin-bottom: 1rem;
+        border-radius: 5px;
+        padding: 1rem;
+        overflow: hidden;
+        position: relative;
+        .mask {
+            background: rgba(0,0,0,0.5);
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            position: absolute;
+            opacity: 0;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+
+    .bannerBox:hover {
+        .mask {
+            opacity: 1;
+        }
+    }
+
+    .exhibition {
+        display: flex;
+        justify-content: center;
+        img {
+            width: 10rem;
+            height: 10rem;
+        }
+    }
 }
 </style>

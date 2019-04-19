@@ -1,16 +1,10 @@
 <template>
 <div>
-  <el-button
-    title="修改"
-    size="mini"
-    type="primary"
-    @click="father.operationDetail(params.data,params.rowIndex)">
-    查看发券用户
-  </el-button>
-
+  <el-tag type="info" v-if="params.data.provide== 0">未中奖</el-tag>
   <el-popover
+  v-else-if="params.data.provide== 1"
     placement="top-start"
-    title="确定删除?"
+      :title="'确认发送奖品?'"
     width="180"
     trigger="click"
     v-model="visible"
@@ -21,14 +15,15 @@
     </div>
     <el-button
       slot="reference"
-      title="修改"
+      :title="'确认发送奖品?'"
       size="mini"
-      type="danger"
+      type="success"
       @click="visible = true"
       >
-      删除
+      发送奖品
     </el-button>
   </el-popover>
+  <el-tag type="success" v-else>该奖品已发送</el-tag>
 
 </div>
 </template>
