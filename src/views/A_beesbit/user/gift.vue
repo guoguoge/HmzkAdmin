@@ -24,7 +24,7 @@ import {
 
 import {
   AwardList,
-  FreezeUser
+  AwardStatus
 } from '@/api/beesbit'
 export default {
   data() {
@@ -44,10 +44,10 @@ export default {
             color: '#8D8D8D'
           },
           cellRenderer: params => {
-            return params.data.provide == 0 ? '未中奖' : params.data.provide == 1 ? '待发送' : '已发送';
+            return params.data.provide == 0 ? '不发送' : params.data.provide == 1 ? '待发送' : '已发送';
           },
           valueGetter: params => {
-            return params.data.provide == 0 ? '未中奖' : params.data.provide == 1 ? '待发送' : '已发送';
+            return params.data.provide == 0 ? '不发送' : params.data.provide == 1 ? '待发送' : '已发送';
           }
         },
         {
@@ -112,10 +112,10 @@ export default {
       },
       options: [{
         value: 0,
-        label: '口红机奖品'
+        label: '夺宝奖品'
       }, {
         value: 1,
-        label: '夺宝奖品'
+        label: '口红机奖品'
       }, {
         value: 2,
         label: '竞拍奖品'
@@ -138,8 +138,9 @@ export default {
         console.log(checkRequest(res, false));
         let data = checkRequest(res, false)
         if (data) {
-          this.rowData[0] = data.rouge_info || []
-          this.rowData[1] = data.treasure_info || []
+          this.rowData[0] = data.treasure_info || []
+          this.rowData[1] = data.rouge_info || []
+          this.rowData[2] = data.auction_info || []
         }
         this.rowIndex = 0
         console.log(this.rowData[0], 'rowDate');
@@ -150,8 +151,8 @@ export default {
       console.log(row, index)
     },
     operationDelete(row, index) {
-      let allow = row.is_allow == 1 ? 2 : 1
-      FreezeUser(this.token, row.id, allow).then(res => {
+      console.log(index);
+      AwardStatus(this.token, '夺宝', row.id, index).then(res => {
         if (checkRequest(res, true)) {
           this.rowData = checkRequest(res, false)
           this.init()

@@ -12,7 +12,6 @@ import {
 } from 'element-ui'
 
 export const jsonpReturn = (data) => { // 处理jsonpReturn格式对象
-  console.log(data);
   let s = (data).replace('jsonpReturn', '')
   s = JSON.parse(s.substring(1, s.length - 2))
   return s

@@ -5,36 +5,36 @@
       <el-card class="box-card">
         <div slot="header" class="clearfix">
           <span>夺宝轮播管理</span>
-          <el-button type="success" style="float: right" size="mini" @click.native="EditNotice(1)">新增夺宝轮播图 + </el-button>
+          <el-button type="success" style="float: right" size="mini" @click.native="showModal(1)">新增夺宝轮播图 + </el-button>
         </div>
         <el-row :gutter="20">
-          <el-col :span="12" v-for="(item,index) in 2">
+          <el-col :span="12" v-for="(item,index) in treasureList" :key="index">
             <div class="bannerBox">
-              <img src="https://wx2.sinaimg.cn/mw690/737af861gy1g1vfkpi99xj20eg0kg16q.jpg" width="100%">
+              <img :src="url + item.carousel" width="100%">
               <div class="mask">
-                <el-button icon="el-icon-search" circle></el-button>
-                <el-button icon="el-icon-edit" circle></el-button>
-                <el-button icon="el-icon-delete" circle></el-button>
+                <el-button icon="el-icon-edit" circle @click.native="operationEdit(1,item)"></el-button>
+                <el-button icon="el-icon-delete" circle @click.native="operationDelete(1,item)"></el-button>
               </div>
             </div>
           </el-col>
         </el-row>
       </el-card>
     </el-col>
+
+
     <el-col :span="12">
       <el-card class="box-card">
         <div slot="header" class="clearfix">
           <span>竞拍轮播管理</span>
-          <el-button type="success" style="float: right" size="mini" @click.native="EditNotice(2)">新增竞拍轮播图 + </el-button>
+          <el-button type="success" style="float: right" size="mini" @click.native="showModal(2)">新增竞拍轮播图 + </el-button>
         </div>
         <el-row :gutter="20">
-          <el-col :span="12" v-for="(item,index) in 2">
+          <el-col :span="12" v-for="(item,index) in actionList" :key="index">
             <div class="bannerBox">
-              <img src="https://wx3.sinaimg.cn/mw690/737af861gy1g1vhenxo1ej20eg0kgtt0.jpgs" width="100%">
+              <img :src="url + item.carousel" width="100%">
               <div class="mask">
-                <el-button icon="el-icon-search" circle></el-button>
-                <el-button icon="el-icon-edit" circle></el-button>
-                <el-button icon="el-icon-delete" circle></el-button>
+                <el-button icon="el-icon-edit" circle @click.native="operationEdit(2,item)"></el-button>
+                <el-button icon="el-icon-delete" circle @click.native="operationDelete(2,item)"></el-button>
               </div>
             </div>
           </el-col>
@@ -43,10 +43,11 @@
     </el-col>
   </el-row>
 
-  <el-dialog :visible.sync="show" :title="dialogTitle" width="50%" center top="5vh">
+
+  <el-dialog :visible.sync="show" :title="dialogTitle" @closed="closed" @open="open" width="50%" center top="5vh">
     <el-row type="flex" justify="space-between">
       <el-col>
-        <el-select v-model="value" clearable placeholder="请选择轮播图对应商品">
+        <el-select v-model="goods_id" clearable placeholder="请选择轮播图对应商品">
           <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
           </el-option>
         </el-select>
@@ -54,17 +55,19 @@
       <el-col>
         <el-upload class="upload-demo" action="#" :multiple="false" :limit="1" :before-upload="handleUpload">
           <el-button size="small" type="primary">点击上传</el-button>
-          <div slot="tip" class="el-upload__tip">请上传banner</div>
+          <div slot="tip" class="el-upload__tip" style="marginBottom:1rem">{{img?img.name:'请上传banner'}}</div>
         </el-upload>
         <div class="exhibition">
-          <img src="" alt="">
+          <img class="img" ref="img" width="100%">
         </div>
       </el-col>
     </el-row>
-    <el-row style="marginTop:1rem" type="flex" justify="space-between">
-      <el-button>确 定</el-button>
+    <el-row style="marginTop:1rem" type="flex" justify="center">
+      <el-button @click.native="submit">确 定</el-button>
     </el-row>
   </el-dialog>
+
+
 </div>
 </template>
 
@@ -81,35 +84,34 @@ import {
   mapGetters
 } from 'vuex'
 
-import {} from '@/api/beesbit'
+import {
+  CarouselList,
+  AddCarousel,
+  DelCarousel,
+  EditCarousel,
+  ListTreasure,
+  AuctionList
+} from '@/api/beesbit'
 
 export default {
   data() {
     return {
       dialogTitle: '新建轮播图',
       show: false,
-      options: [{
-        value: '选项1',
-        label: '黄金糕'
-      }, {
-        value: '选项2',
-        label: '双皮奶'
-      }, {
-        value: '选项3',
-        label: '蚵仔煎'
-      }, {
-        value: '选项4',
-        label: '龙须面'
-      }, {
-        value: '选项5',
-        label: '北京烤鸭'
-      }],
-      value: ''
+      type: '',
+      options: [],
+      goods_id: '',
+      img: '',
+      edit: false,
+      treasureList: [],
+      actionList: [],
+      carouselId: ''
     }
   },
   computed: {
     ...mapGetters([
-      'token'
+      'token',
+      'url'
     ])
   },
   components: {
@@ -118,16 +120,64 @@ export default {
   },
   methods: {
     init() {
-
+      CarouselList(4).then(res => {
+        this.treasureList = []
+        this.actionList = []
+        let data = checkRequest(res, false)
+        if (checkRequest(res, false)) {
+          data.forEach(item => {
+            if (item.type == 1) {
+              this.treasureList.push({
+                carousel: item.carousel,
+                goods_id: item.goods_id,
+                id: item.id,
+                time: item.time,
+                type: item.type,
+              })
+            } else {
+              this.actionList.push({
+                carousel: item.carousel,
+                goods_id: item.goods_id,
+                id: item.id,
+                time: item.time,
+                type: item.type,
+              })
+            }
+          })
+        }
+      })
     },
-    operationEdit(row, index) {},
-    EditNotice(num) {
-
+    operationPreview(type, id) {
+      console.log(type);
+    },
+    operationEdit(type, item) {
+      this.dialogTitle = '修改轮播图'
+      let img = this.$refs.img
+      this.show = true
+      this.edit = true
+      this.type = type
+      this.carouselId = item.id
+      this.goods_id = Number(item.goods_id)
+      if (img) {
+        img.setAttribute('src', this.url + item.carousel);
+      }
+      console.log(type);
+      console.log(this.goods_id, this.img);
+    },
+    operationDelete(type, item) {
+      console.log(type);
+      DelCarousel(this.token, 2, item.id).then(res => {
+        if (checkRequest(res, true)) {
+          this.show = false
+          this.init()
+        }
+      })
+    },
+    showModal(num) {
+      this.type = num
       this.show = true
     },
-    reflash(val) {
-
-    },
+    reflash(val) {},
     handleUpload(file) {
       console.log(file);
       this.img = file
@@ -141,6 +191,76 @@ export default {
       this.fileList.push(file)
       return false
     },
+    open() {
+      if (this.type == 1) {
+        ListTreasure(this.token, 4).then(res => {
+          let data = checkRequest(res, false)
+          console.log(data);
+          data.forEach(item => {
+            this.options.push({
+              label: item.cat_name,
+              value: item.id,
+            })
+          })
+        })
+      } else {
+        AuctionList(this.token, 4).then(res => {
+          let data = checkRequest(res, false)
+          console.log(data);
+          data.forEach(item => {
+            this.options.push({
+              label: item.cate_name,
+              value: item.id,
+            })
+          })
+        })
+      }
+    },
+    closed() { //初始化
+      this.img = ''
+      this.goods_id = ''
+      this.options = []
+      this.edit = false
+      this.carouselId = ''
+      let img = this.$refs.img
+      img.setAttribute('src', '');
+    },
+    submit() {
+      console.log(this.goods_id);
+      if (this.goods_id) {
+
+        let FD = new FormData()
+
+        FD.append('token', this.token)
+        FD.append('method', this.edit ? 3 : 1)
+        FD.append('type', this.type)
+        if (this.edit) {
+          FD.append('car_id', this.carouselId)
+        }
+        FD.append('img', this.img ? this.img : '')
+        FD.append('goods_id', this.goods_id)
+        if (this.edit) {
+          EditCarousel(FD).then(res => {
+            if (checkRequest(res, true)) {
+              this.show = false
+              this.init()
+            }
+          })
+        } else {
+          AddCarousel(FD).then(res => {
+            if (checkRequest(res, true)) {
+              this.show = false
+              this.init()
+            }
+          })
+        }
+      } else {
+        this.$message({
+          message: '请确认轮播图信息完整',
+          type: 'error'
+        })
+      }
+    }
   },
   created() {
     this.init()
@@ -180,12 +300,13 @@ export default {
         }
     }
 
-    .exhibition {
+    /deep/.exhibition {
         display: flex;
         justify-content: center;
-        img {
-            width: 10rem;
-            height: 10rem;
+        /deep/.img {
+            width: 8rem;
+            height: 8rem;
+            margin: 1rem;
         }
     }
 }

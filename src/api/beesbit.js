@@ -308,6 +308,62 @@ export const AwardList = (token) => {
   })
 }
 
+export const AwardStatus = (token, origin, id, status) => {
+  // 奖品--奖品列表
+  return request({
+    url: 'award_status',
+    method: 'post',
+    data: {
+      token: token,
+      origin: origin,
+      id: id,
+      status: status,
+    }
+  })
+}
+
+export const CarouselList = method => {
+  // 奖品--奖品列表
+  return request({
+    url: 'carousel',
+    method: 'post',
+    data: {
+      method: method
+    }
+  })
+}
+
+export const AddCarousel = fd => {
+  // 奖品--奖品列表
+  return request({
+    url: 'carousel',
+    method: 'post',
+    data: fd
+  })
+}
+
+export const DelCarousel = (token, method, car_id) => {
+  // 奖品--奖品列表
+  return request({
+    url: 'carousel',
+    method: 'post',
+    data: {
+      token: token,
+      method: method,
+      car_id: car_id
+    }
+  })
+}
+
+export const EditCarousel = fd => {
+  // 奖品--奖品列表
+  return request({
+    url: 'carousel',
+    method: 'post',
+    data: fd
+  })
+}
+
 
 
 
