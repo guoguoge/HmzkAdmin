@@ -43,14 +43,14 @@
         <el-row type="flex" justify="space-between" :gutter="20">
           <el-col>
             <el-form-item label="马甲中奖id(非必填)">
-              <el-select style="width:100%" v-model="form.vest_user" placeholder="马甲中奖人(非必填)">
+              <el-select style="width:100%" v-model="form.vest_user" placeholder="马甲中奖人(非必填)" clearable>
                 <el-option v-for="(item,index) in vestUserList" :key="index" :label="item.name" :value="String(item.id)" />
               </el-select>
             </el-form-item>
           </el-col>
           <el-col>
             <el-form-item label="马甲号竞拍价格(非必填)" prop="vest_price">
-              <el-input placeholder="马甲号竞拍价格(非必填)" v-model="form.vest_price"></el-input>
+              <el-input placeholder="马甲号竞拍价格(非必填)" v-model="form.vest_price" clearable></el-input>
             </el-form-item>
           </el-col>
           <el-col>
