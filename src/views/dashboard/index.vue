@@ -76,7 +76,7 @@
         </div>
 
         <el-form-item label="" prop="age">
-          <el-upload class="upload-demo" action="#" :before-upload="handleUpload2" :file-list="fileList2">
+          <el-upload class="upload-demo" action="#" :before-upload="handleUpload2">
             <el-button size="small" type="primary">点击上传详情图</el-button>
             <div slot="tip" style="color:red" class="el-upload__tip">{{num == 1? '请上传详情图':'选择图片则替换之前所有的详情图,不操作则不做改变'}}</div>
           </el-upload>
@@ -321,7 +321,8 @@ export default {
       fileList2: [], // 详情图列表
       num: '', // 判断新建或者修改的 1为新建 2为修改
       vestUserList: [], // 马甲用户列表
-      check: true
+      check: true,
+
     }
   },
   computed: {
