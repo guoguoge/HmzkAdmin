@@ -6,7 +6,7 @@
     </el-col>
   </el-row>
   <AGTable :rowData="rowData" :columnDefs="column" :defaultColDef="config" @operationDelete="operationDelete" @operationEdit="operationEdit"></AGTable>
-  <el-dialog :visible.sync="show" :title="title" top="5vh" width="50%" center>
+  <el-dialog :visible.sync="show" :title="title" @closed="closed" top="5vh" width="70%" center>
     <span slot="footer" class="dialog-footer">
       <el-form status-icon ref="form" :rules="rules" :model="form" label-position="left" class="demo-ruleForm">
         <el-row type="flex" justify="space-between" :gutter="20">
@@ -68,7 +68,7 @@
         <!-- 上传图片 -->
 
         <el-row type="flex" justify="start" style="marginBottom:1rem">
-          <el-col :span="6">
+          <el-col :span="4">
             <el-form-item prop="age">
               <el-upload class="upload-demo" action="#" :multiple="false" :limit="1" :before-upload="handleUpload">
                 <el-button size="small" type="primary">点击上传封面图</el-button>
@@ -81,7 +81,7 @@
               <img class="superImg" v-show="!fileList.length" src="../../assets/noimg.png" width="100%">
             </div>
           </el-col>
-          <el-col :span="18">
+          <el-col :span="20">
             <el-form-item prop="age">
               <el-upload class="upload-demo" action="#" :before-upload="handleUpload2">
                 <el-button size="small" type="primary">点击上传详情图</el-button>
@@ -89,10 +89,25 @@
               </el-upload>
             </el-form-item>
 
-            <div class="exhibition" v-viewer>
-              <img class="superImg" v-if="num == 2 && check" v-for="(item,index) in form.detail_img" :src="url+item" width="100%">
-              <img class="superImg" v-else src="../../assets/noimg.png" width="100%">
+
+            <!-- 用户修改的时候出现 -->
+            <div class="exhibition EditExhibition" v-viewer v-if="num == 2">
+              <div class="imgBox"></div>
+              <div class="" v-if="!fileList2.length">
+                <img class="superImg" v-for="(item,index) in form.detail_img" :src="url+item" width="100%">
+              </div>
             </div>
+
+            <div class="exhibition addExhibition" v-viewer v-else-if="num == 1">
+              <!-- 用户新建的时候出现 -->
+              <div class="imgBox"></div>
+              <img v-if="!fileList2.length" class="superImg noimg" src="../../assets/noimg.png" width="100%">
+            </div>
+
+            <div class="exhibition" v-viewer v-else>
+              <img class="superImg" src="../../assets/noimg.png" width="100%">
+            </div>
+
           </el-col>
         </el-row>
 
@@ -106,6 +121,7 @@
   <el-dialog :visible.sync="dialogVisible">
     <img width="100%" :src="dialogImageUrl" alt="">
   </el-dialog>
+
 </div>
 </template>
 
@@ -333,7 +349,6 @@ export default {
       fileList2: [], // 详情图列表
       num: '', // 判断新建或者修改的 1为新建 2为修改
       vestUserList: [], // 马甲用户列表
-      check: true
     }
   },
   computed: {
@@ -347,7 +362,6 @@ export default {
   },
   methods: {
     init() {
-      this.check = true
       ListTreasure(this.token, 4).then(res => {
         this.rowData = checkRequest(res, false)
         console.log(this.rowData);
@@ -361,8 +375,6 @@ export default {
           })
         })
         this.form.category = this.categoryList[0].value
-        console.log(checkRequest(res, false));
-        console.log(typeof this.categoryList[0].value);
       })
       VestUser(this.token).then(res => {
         let data = checkRequest(res, false)
@@ -375,7 +387,7 @@ export default {
     },
     operationEdit(row, index) {
       this.cateId = row.id
-      this.num = 2
+      this.showDialog(2)
       this.show = true
       this.title = '修改夺宝商品'
 
@@ -402,16 +414,6 @@ export default {
         }
       })
     },
-    upload(file) {
-      this.form.cover_img = file
-      console.log(this.form.cover_img);
-      let img = this.$refs.img
-      let freader = new FileReader();
-      freader.readAsDataURL(file);
-      freader.onload = function(e) {
-        img.setAttribute('src', e.target.result);
-      }
-    },
     handleUpload(file) {
       let img = this.$refs.img
       let freader = new FileReader();
@@ -424,26 +426,52 @@ export default {
       return false
     },
     handleUpload2(file) {
-      console.log(file);
+      let freader = new FileReader();
+      freader.readAsDataURL(file);
+      let imgBox = document.querySelector('.imgBox')
       if (this.num == 2) {
-        this.check = false
         this.$message({
           message: '您已修改详情图,将替换之前的详情图!',
           type: 'warning'
         })
       }
+
       this.fileList2.push(file)
+      var img = document.createElement('img')
+      freader.onload = function(e) {
+        img.setAttribute('src', e.target.result);
+        img.setAttribute('width', '100%');
+        img.classList.add('superImg');
+        imgBox.appendChild(img)
+      }
       return false
     },
+    closed() {
+      if (this.num == 1) {
+        let imgBox = document.querySelector('.imgBox')
+        let div = document.createElement('div')
+        let addExhibition = document.querySelector('.addExhibition')
+        div.classList.add('imgBox')
+        addExhibition.appendChild(div)
+        imgBox.parentNode.removeChild(imgBox)
+      } else {
+        let imgBox = document.querySelector('.imgBox')
+        let div = document.createElement('div')
+        let EditExhibition = document.querySelector('.EditExhibition')
+        div.classList.add('imgBox')
+        EditExhibition.appendChild(div)
+        imgBox.parentNode.removeChild(imgBox)
+      }
+    },
     showDialog(num) {
-      this.$refs['form'].resetFields();
-      this.fileList = []
-      this.fileList2 = []
       this.show = true
-      this.num = 1
+      this.num = num
       if (num == 1) {
         this.title = '新建夺宝商品'
       }
+      this.$refs['form'].resetFields();
+      this.fileList = []
+      this.fileList2 = []
     },
     submit() {
       console.log(this.form);
@@ -539,12 +567,14 @@ export default {
 .exhibition {
     display: flex;
     justify-content: center;
-    .superImg {
+    /deep/.superImg {
         border: 1px solid #ccc;
         padding: 5px;
-        width: 8rem;
-        height: 8rem;
+        width: 7rem;
+        height: 7rem;
+        margin: 0 5px;
         border-radius: 5px;
+        cursor: zoom-in;
     }
     img {
         cursor: zoom-in;

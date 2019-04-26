@@ -12,7 +12,7 @@
   </el-dialog>
 
 
-  <el-dialog :visible.sync="show" :title="title" width="70%" center>
+  <el-dialog :visible.sync="show" :title="title" @closed="closed" width="70%" center>
     <span slot="footer" class="dialog-footer">
       <el-form status-icon ref="form" :rules="rules" :model="form" label-position="left" class="demo-ruleForm">
         <el-row type="flex" justify="space-between" :gutter="20">
@@ -74,28 +74,53 @@
           </el-col>
         </el-row>
 
-        <el-form-item>
-          <el-upload class="upload-demo" action="#" :multiple="false" :limit="1" :before-upload="handleUpload">
-            <el-button size="small" type="primary">点击上传</el-button>
-            <div slot="tip" class="el-upload__tip">{{num == 1? '请上传封面图':'选择图片则替换封面图,不操作则不做改变'}}</div>
-          </el-upload>
-        </el-form-item>
 
-        <div class="exhibition">
-          <img ref="img" v-if="form.cover_img" :src="url + form.cover_img" width="100%">
-          <img v-else src="../../../assets/noimg.png" width="100%">
-        </div>
 
-        <el-form-item>
-          <el-upload class="upload-demo" action="#" :before-upload="handleUpload2" :file-list="fileList2">
-            <el-button size="small" type="primary">点击上传</el-button>
-            <div slot="tip" class="el-upload__tip">{{num == 1? '请上传详情图':'选择图片则替换之前所有的详情图,不操作则不做改变'}}</div>
-          </el-upload>
-        </el-form-item>
+        <!-- 上传图片 -->
 
-        <div class="exhibition" v-if="num == 2 && check">
-          <img v-for="(item,index) in form.detail_img" :src="'http://'+item" width="100%">
-        </div>
+        <el-row type="flex" justify="start" style="marginBottom:1rem">
+          <el-col :span="4">
+            <el-form-item prop="age">
+              <el-upload class="upload-demo" action="#" :multiple="false" :limit="1" :before-upload="handleUpload">
+                <el-button size="small" type="primary">点击上传封面图</el-button>
+                <div slot="tip" class="el-upload__tip">{{num == 1? '请上传封面图':'选择图片则替换封面图,不操作则不做改变'}}</div>
+              </el-upload>
+            </el-form-item>
+
+            <div class="exhibition" v-viewer>
+              <img class="superImg" ref="img" v-show="fileList.length" :src="'http://' + fileList[0]" width="100%">
+              <img class="superImg" v-show="!fileList.length" src="../../../assets/noimg.png" width="100%">
+            </div>
+          </el-col>
+          <el-col :span="20">
+            <el-form-item prop="age">
+              <el-upload class="upload-demo" action="#" :before-upload="handleUpload2">
+                <el-button size="small" type="primary">点击上传详情图</el-button>
+                <div slot="tip" style="color:red" class="el-upload__tip">{{num == 1? '请上传详情图':'选择图片则替换之前所有的详情图,不操作则不做改变'}}</div>
+              </el-upload>
+            </el-form-item>
+
+
+            <!-- 用户修改的时候出现 -->
+            <div class="exhibition EditExhibition" v-viewer v-if="num == 2">
+              <div class="imgBox"></div>
+              <div class="" v-if="!fileList2.length">
+                <img class="superImg" v-for="(item,index) in form.detail_img" :src="'http://' + item" width="100%">
+              </div>
+            </div>
+
+            <div class="exhibition addExhibition" v-viewer v-else-if="num == 1">
+              <!-- 用户新建的时候出现 -->
+              <div class="imgBox"></div>
+              <img v-if="!fileList2.length" class="superImg noimg" src="../../../assets/noimg.png" width="100%">
+            </div>
+
+            <div class="exhibition" v-viewer v-else>
+              <img class="superImg" src="../../../assets/noimg.png" width="100%">
+            </div>
+
+          </el-col>
+        </el-row>
 
       </el-form>
       <el-button size="large" style="width:100%;" type="primary" @click="submit">确 定</el-button>
@@ -429,8 +454,8 @@ export default {
       this.form.start = Date.parse(new Date(row.start))
       this.form.end = Date.parse(new Date(row.end))
       this.form.status = row.status
-
-      this.form.cover_img = row.cover_img
+      this.fileList = []
+      this.fileList.push(row.cover_img)
       this.form.detail_img = row.detail_img
     },
     operationDelete(row, index) {
@@ -448,19 +473,7 @@ export default {
         }
       })
     },
-    // upload(file) {
-    //   console.log(file);
-    //   this.img = file
-    //   let img = this.$refs.img
-    //   let freader = new FileReader();
-    //   freader.readAsDataURL(file);
-    //   freader.onload = function(e) {
-    //     img.setAttribute('src', e.target.result);
-    //   }
-    // },
     handleUpload(file) {
-      console.log(file);
-      this.img = file
       let img = this.$refs.img
       let freader = new FileReader();
       freader.readAsDataURL(file);
@@ -472,26 +485,52 @@ export default {
       return false
     },
     handleUpload2(file) {
-      console.log(file);
+      let freader = new FileReader();
+      freader.readAsDataURL(file);
+      let imgBox = document.querySelector('.imgBox')
       if (this.num == 2) {
-        this.check = false
         this.$message({
           message: '您已修改详情图,将替换之前的详情图!',
           type: 'warning'
         })
       }
+
       this.fileList2.push(file)
+      var img = document.createElement('img')
+      freader.onload = function(e) {
+        img.setAttribute('src', e.target.result);
+        img.setAttribute('width', '100%');
+        img.classList.add('superImg');
+        imgBox.appendChild(img)
+      }
       return false
     },
+    closed() {
+      if (this.num == 1) {
+        let imgBox = document.querySelector('.imgBox')
+        let div = document.createElement('div')
+        let addExhibition = document.querySelector('.addExhibition')
+        div.classList.add('imgBox')
+        addExhibition.appendChild(div)
+        imgBox.parentNode.removeChild(imgBox)
+      } else {
+        let imgBox = document.querySelector('.imgBox')
+        let div = document.createElement('div')
+        let EditExhibition = document.querySelector('.EditExhibition')
+        div.classList.add('imgBox')
+        EditExhibition.appendChild(div)
+        imgBox.parentNode.removeChild(imgBox)
+      }
+    },
     showDialog(num) {
-      this.$refs['form'].resetFields();
-      this.fileList = []
-      this.fileList2 = []
       this.show = true
-      this.num = 1
+      this.num = num
       if (num == 1) {
         this.title = '新建竞拍商品'
       }
+      this.$refs['form'].resetFields();
+      this.fileList = []
+      this.fileList2 = []
     },
     submit() {
       console.log(this.form);
@@ -599,9 +638,17 @@ export default {
 .exhibition {
     display: flex;
     justify-content: center;
+    /deep/.superImg {
+        border: 1px solid #ccc;
+        padding: 5px;
+        width: 7rem;
+        height: 7rem;
+        margin: 0 5px;
+        border-radius: 5px;
+        cursor: zoom-in;
+    }
     img {
-        width: 10rem;
-        height: 10rem;
+        cursor: zoom-in;
     }
 }
 </style>
