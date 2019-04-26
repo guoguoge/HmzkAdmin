@@ -74,7 +74,6 @@
           </el-col>
         </el-row>
 
-
         <el-form-item>
           <el-upload class="upload-demo" action="#" :multiple="false" :limit="1" :before-upload="handleUpload">
             <el-button size="small" type="primary">点击上传</el-button>
@@ -83,7 +82,8 @@
         </el-form-item>
 
         <div class="exhibition">
-          <img ref="img" :src="form.cover_img?'http://' + form.cover_img:'http://pic.baike.soso.com/p/20140611/20140611145529-1600143101.jpg'" width="100%">
+          <img ref="img" v-if="form.cover_img" :src="url + form.cover_img" width="100%">
+          <img v-else src="../../../assets/noimg.png" width="100%">
         </div>
 
         <el-form-item>

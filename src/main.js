@@ -25,9 +25,33 @@ import './mock' // simulation data
 
 import * as filters from './filters' // global filters
 
+import Viewer from 'v-viewer'
+import 'viewerjs/dist/viewer.css'
+
 Vue.use(Element, {
   size: Cookies.get('size') || 'medium', // set element-ui default size
   i18n: (key, value) => i18n.t(key, value)
+})
+
+Vue.use(Viewer)
+
+Viewer.setDefaults({
+  Options: {
+    'inline': true,
+    'button': true,
+    'navbar': true,
+    'title': true,
+    'toolbar': true,
+    'tooltip': true,
+    'movable': true,
+    'zoomable': true,
+    'rotatable': true,
+    'scalable': true,
+    'transition': true,
+    'fullscreen': true,
+    'keyboard': true,
+    'url': 'data-source'
+  }
 })
 
 // register global utility filters.

@@ -64,27 +64,39 @@
           </div>
         </el-form-item>
 
-        <el-form-item label="" prop="age">
-          <el-upload class="upload-demo" action="#" :multiple="false" :limit="1" :before-upload="handleUpload">
-            <el-button size="small" type="primary">点击上传封面图</el-button>
-            <div slot="tip" class="el-upload__tip">{{num == 1? '请上传封面图':'选择图片则替换封面图,不操作则不做改变'}}</div>
-          </el-upload>
-        </el-form-item>
 
-        <div class="exhibition">
-          <img ref="img" :src="form.cover_img?url + form.cover_img:'http://pic.baike.soso.com/p/20140611/20140611145529-1600143101.jpg'" width="100%">
-        </div>
+        <!-- 上传图片 -->
 
-        <el-form-item label="" prop="age">
-          <el-upload class="upload-demo" action="#" :before-upload="handleUpload2">
-            <el-button size="small" type="primary">点击上传详情图</el-button>
-            <div slot="tip" style="color:red" class="el-upload__tip">{{num == 1? '请上传详情图':'选择图片则替换之前所有的详情图,不操作则不做改变'}}</div>
-          </el-upload>
-        </el-form-item>
+        <el-row type="flex" justify="start" style="marginBottom:1rem">
+          <el-col :span="6">
+            <el-form-item prop="age">
+              <el-upload class="upload-demo" action="#" :multiple="false" :limit="1" :before-upload="handleUpload">
+                <el-button size="small" type="primary">点击上传封面图</el-button>
+                <div slot="tip" class="el-upload__tip">{{num == 1? '请上传封面图':'选择图片则替换封面图,不操作则不做改变'}}</div>
+              </el-upload>
+            </el-form-item>
 
-        <div class="exhibition" v-if="num == 2 && check">
-          <img v-for="(item,index) in form.detail_img" :src="url+item" width="100%">
-        </div>
+            <div class="exhibition" v-viewer>
+              <img class="superImg" ref="img" v-show="fileList.length" :src="url + fileList[0]" width="100%">
+              <img class="superImg" v-show="!fileList.length" src="../../assets/noimg.png" width="100%">
+            </div>
+          </el-col>
+          <el-col :span="18">
+            <el-form-item prop="age">
+              <el-upload class="upload-demo" action="#" :before-upload="handleUpload2">
+                <el-button size="small" type="primary">点击上传详情图</el-button>
+                <div slot="tip" style="color:red" class="el-upload__tip">{{num == 1? '请上传详情图':'选择图片则替换之前所有的详情图,不操作则不做改变'}}</div>
+              </el-upload>
+            </el-form-item>
+
+            <div class="exhibition" v-viewer>
+              <img class="superImg" v-if="num == 2 && check" v-for="(item,index) in form.detail_img" :src="url+item" width="100%">
+              <img class="superImg" v-else src="../../assets/noimg.png" width="100%">
+            </div>
+          </el-col>
+        </el-row>
+
+        <!-- 上传图片 -->
 
       </el-form>
       <el-button size="large" style="width:100%;" type="primary" @click="submit">确 定</el-button>
@@ -321,8 +333,7 @@ export default {
       fileList2: [], // 详情图列表
       num: '', // 判断新建或者修改的 1为新建 2为修改
       vestUserList: [], // 马甲用户列表
-      check: true,
-
+      check: true
     }
   },
   computed: {
@@ -376,7 +387,8 @@ export default {
       this.form.start = row.start * 1000
       this.form.end = row.end * 1000
       this.form.status = row.status
-      this.form.cover_img = row.cover_img
+      this.fileList = []
+      this.fileList.push(row.cover_img)
       this.form.detail_img = row.detail_img
     },
     operationDelete(row, index) {
@@ -391,8 +403,8 @@ export default {
       })
     },
     upload(file) {
-      console.log(file);
-      this.img = file
+      this.form.cover_img = file
+      console.log(this.form.cover_img);
       let img = this.$refs.img
       let freader = new FileReader();
       freader.readAsDataURL(file);
@@ -401,8 +413,6 @@ export default {
       }
     },
     handleUpload(file) {
-      console.log(file);
-      this.img = file
       let img = this.$refs.img
       let freader = new FileReader();
       freader.readAsDataURL(file);
@@ -529,9 +539,15 @@ export default {
 .exhibition {
     display: flex;
     justify-content: center;
+    .superImg {
+        border: 1px solid #ccc;
+        padding: 5px;
+        width: 8rem;
+        height: 8rem;
+        border-radius: 5px;
+    }
     img {
-        width: 10rem;
-        height: 10rem;
+        cursor: zoom-in;
     }
 }
 </style>
