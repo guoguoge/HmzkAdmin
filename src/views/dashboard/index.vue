@@ -32,7 +32,7 @@
         <el-row type="flex" justify="space-between" :gutter="20">
           <el-col>
             <el-form-item label="马甲中奖id(非必填)">
-              <el-select style="width:100%" v-model="form.vest_user" placeholder="马甲中奖人(非必填)">
+              <el-select style="width:100%" v-model="form.vest_user" placeholder="马甲中奖人(非必填)" clearable>
                 <el-option v-for="(item,index) in vestUserList" :key="index" :label="item.name" :value="item.id" />
               </el-select>
             </el-form-item>
@@ -114,7 +114,7 @@
         <!-- 上传图片 -->
 
       </el-form>
-      <el-button size="large" style="width:100%;" type="primary" @click="submit">确 定</el-button>
+      <el-button size="large" style="width:100%;" type="primary" @click="submit" :loading="loading">确 定</el-button>
     </span>
   </el-dialog>
 
@@ -349,6 +349,7 @@ export default {
       fileList2: [], // 详情图列表
       num: '', // 判断新建或者修改的 1为新建 2为修改
       vestUserList: [], // 马甲用户列表
+      loading: false
     }
   },
   computed: {
@@ -478,6 +479,7 @@ export default {
       console.log(this.fileList);
       console.log(this.fileList2);
       console.log(this.num);
+      this.loading = true
       this.$refs['form'].validate((valid) => {
         if (valid) {
           let FD = new FormData()
@@ -518,6 +520,7 @@ export default {
                     type: 'error'
                   })
                 }
+                this.loading = false
               })
             } else { // 修改
               EditTreasure(FD).then(res => {
@@ -538,6 +541,7 @@ export default {
                     type: 'error'
                   })
                 }
+                this.loading = false
               })
             }
           } else {
