@@ -198,83 +198,86 @@ code {
 .multiselect--active {
   z-index: 1000 !important;
 }
-
 /*
 惠民折扣自定义属性
  */
 
+.el-pagination.is-background .el-pager li:not(.disabled):hover {
+  color: #FF7B2A;
+}
 
- .el-pagination.is-background .el-pager li:not(.disabled):hover {
-   color: #FF7B2A;
- }
+.el-pagination.is-background .el-pager li:not(.disabled).active {
+  background-color: #FF7B2A;
+}
+// 修正el-row的水平对齐的问题
 
- .el-pagination.is-background .el-pager li:not(.disabled).active {
-   background-color: #FF7B2A;
- }
+/deep/.el-row--flex {
+  align-items: center;
+}
 
+/deep/.el-dialog__wrapper {
+  z-index: 100!important;
+}
+//按钮样式
 
- // 修正el-row的水平对齐的问题
- /deep/.el-row--flex {
-     align-items: center;
- }
+/deep/.beesbitBtn {
+  background: #FF7B2A;
+}
 
- //按钮样式
- /deep/.beesbitBtn {
-     background: #FF7B2A;
- }
+/deep/.beesbitBtn:active {
+  background: #FF7B2A;
+}
 
- /deep/.beesbitBtn:active {
-     background: #FF7B2A;
- }
+/deep/.el-form {
+  //表单样式修改
+  .el-form-item {
+    margin-bottom: 5px;
+  }
 
- /deep/.el-form {
-     //表单样式修改
-     .el-form-item {
-         margin-bottom: 5px;
-     }
-     .el-form-item__label {
-         padding: 0;
-     }
-     .el-input__inner {
-         margin: 0.5rem 0;
-     }
- }
+  .el-form-item__label {
+    padding: 0;
+  }
 
- /deep/.el-input--mini .el-input__inner {
-   height: 22px
- }
+  .el-input__inner {
+    margin: 0.5rem 0;
+  }
+}
 
- ::-webkit-scrollbar {
- width: 10px;
- height: 10px;
+/deep/.el-input--mini .el-input__inner {
+  height: 22px;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track-piece {
- background-color: #ebebeb;
+  background-color: #ebebeb;
 }
 
 ::-webkit-scrollbar-thumb {
- transition: background-color 0.5s;
+  transition: background-color 0.5s;
 }
 
 ::-webkit-scrollbar-thumb:vertical {
- transition: background-color 0.5s;
- height: 32px;
- background-color: #a9a9a9;
+  transition: background-color 0.5s;
+  height: 32px;
+  background-color: #a9a9a9;
 }
 
 ::-webkit-scrollbar-thumb:hover {
- transition: background-color 0.5s;
- height: 32px;
- background-color: #888;
+  transition: background-color 0.5s;
+  height: 32px;
+  background-color: #888;
 }
 
 ::-webkit-scrollbar-thumb:horizontal {
- width: 32px;
- background-color: #a9a9a9;
+  width: 32px;
+  background-color: #a9a9a9;
 }
 
 ::selection {
-background: #ff7b2a9e;
-color: #ffffff;
+  background: #ff7b2a9e;
+  color: #ffffff;
 }

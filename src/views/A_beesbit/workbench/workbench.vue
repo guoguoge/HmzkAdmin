@@ -79,7 +79,7 @@
         <!-- 上传图片 -->
 
         <el-row type="flex" justify="start" style="marginBottom:1rem">
-          <el-col :span="4">
+          <el-col :span="6">
             <el-form-item prop="age">
               <el-upload class="upload-demo" action="#" :multiple="false" :limit="1" :before-upload="handleUpload">
                 <el-button size="small" type="primary">点击上传封面图</el-button>
@@ -92,10 +92,11 @@
               <img class="superImg" v-show="!fileList.length" src="../../../assets/noimg.png" width="100%">
             </div>
           </el-col>
-          <el-col :span="20">
+          <el-col :span="18">
             <el-form-item prop="age">
               <el-upload class="upload-demo" action="#" :before-upload="handleUpload2">
                 <el-button size="small" type="primary">点击上传详情图</el-button>
+                <el-button v-if="num == 1" slot="tip" size="small" type="danger" @click.native="clearDetail" style="marginLeft:10px">清空</el-button>
                 <div slot="tip" style="color:red" class="el-upload__tip">{{num == 1? '请上传详情图':'选择图片则替换之前所有的详情图,不操作则不做改变'}}</div>
               </el-upload>
             </el-form-item>
@@ -521,6 +522,27 @@ export default {
         EditExhibition.appendChild(div)
         imgBox.parentNode.removeChild(imgBox)
       }
+    },
+    clearDetail() {
+      if (this.fileList2.length) {
+        let imgBox = document.querySelector('.imgBox')
+        let div = document.createElement('div')
+        let addExhibition = document.querySelector('.addExhibition')
+        div.classList.add('imgBox')
+        addExhibition.appendChild(div)
+        imgBox.parentNode.removeChild(imgBox)
+        this.fileList2 = []
+        this.$message({
+          message: '详情图已清空!',
+          type: 'success'
+        })
+      } else {
+        this.$message({
+          message: '暂无详情图!',
+          type: 'warning'
+        })
+      }
+
     },
     showDialog(num) {
       this.show = true
