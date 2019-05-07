@@ -87,11 +87,14 @@
               </el-upload>
             </el-form-item>
 
+            <!-- 封面图 -->
             <div class="exhibition" v-viewer>
               <img class="superImg" ref="img" v-show="fileList.length" :src="'http://' + fileList[0]" width="100%">
               <img class="superImg" v-show="!fileList.length" src="../../../assets/noimg.png" width="100%">
             </div>
+
           </el-col>
+
           <el-col :span="18">
             <el-form-item prop="age">
               <el-upload class="upload-demo" action="#" :before-upload="handleUpload2">
@@ -446,7 +449,6 @@ export default {
       this.show = true
       this.title = '修改竞拍商品'
 
-
       this.form.category = row.cate_id
       this.form.name = row.name
       this.form.vest_price = row.vest_price
@@ -575,12 +577,14 @@ export default {
           FD.append('start', this.form.start / 1000)
           FD.append('end', this.form.end / 1000)
           FD.append('status', this.form.status)
-          if (this.fileList[0]) {
-            FD.append('cover_img', this.fileList[0])
-          }
-          if (this.num == 2) {
-            FD.append('id', this.cateId)
-          }
+          const TYPE = typeof this.fileList[0]
+
+          console.log(TYPE); // 如果this.fileList[0]里面的值不是一个文件的话 那么说明么有上传新的文件 那么就没必要传入cover_img这个字段
+
+          if (TYPE !== 'string') FD.append('cover_img', this.fileList[0])
+
+          if (this.num == 2) FD.append('id', this.cateId)
+
           if (this.fileList2.length) {
             this.fileList2.forEach((item, index) => {
               FD.append('detail_img[]', item || '')

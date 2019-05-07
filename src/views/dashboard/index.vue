@@ -505,7 +505,6 @@ export default {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           let FD = new FormData()
-
           FD.append('token', this.token)
           FD.append('method', this.num == 1 ? 1 : 3)
           FD.append('name', this.form.name)
@@ -517,9 +516,9 @@ export default {
           FD.append('end', this.form.end / 1000)
           FD.append('status', this.form.status)
           FD.append('cover_img', this.fileList[0])
-          if (this.num == 2) {
-            FD.append('id', this.cateId)
-          }
+
+          if (this.num == 2) FD.append('id', this.cateId)
+
           this.fileList2.forEach((item, index) => {
             FD.append('detail_img' + index, item)
           })
