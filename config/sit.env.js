@@ -1,5 +1,5 @@
 module.exports = {
   NODE_ENV: '"production"',
   ENV_CONFIG: '"sit"',
-  BASE_API: '"http://129.28.67.91/Hmzk/public/"',
+  BASE_API: '"http://www.lingximan.com/Api/public/"',
 }

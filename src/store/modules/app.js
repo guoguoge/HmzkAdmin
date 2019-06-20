@@ -10,7 +10,7 @@ const app = {
     language: 'zh',
     size: Cookies.get('size') || 'medium',
     width: document.body.clientWidth > 375,
-    url: 'http://129.28.67.91/Hmzk/public/'
+    url: 'http://www.lingximan.com/Api/public/'
   },
   mutations: {
     TOGGLE_SIDEBAR: state => {
