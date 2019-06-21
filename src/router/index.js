@@ -89,7 +89,7 @@ export const constantRouterMap = [{
         component: () =>
           import ('@/views/A_beesbit/agent/agent'),
         meta: {
-          title: '口红机后台',
+          title: 'agent',
           icon: 'people'
         }
       },

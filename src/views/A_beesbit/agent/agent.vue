@@ -1,5 +1,5 @@
 <template>
-  <iframe src="http://129.28.67.91/admin.php" width="100%" :height="height" frameborder='0'></iframe>
+  <iframe src="http://www.lingximan.com/admin.php" width="100%" :height="height" frameborder='0'></iframe>
 </template>
 
 <script>
