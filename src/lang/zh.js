@@ -9,7 +9,7 @@ export default {
     order: '用户订单',
     neworder: '马甲用户管理',
     reneworder: '续费订单列表',
-    withdraw: '收益提现',
+    withdraw: '用户提现',
     bannerManager: '轮播图管理',
     balancewithdraw: '分类管理列表',
     status: '运行信息列表',

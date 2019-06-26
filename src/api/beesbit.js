@@ -967,21 +967,18 @@ export const RenewOrderAuditing = (token, order_id, auditing) => {
   })
 }
 
-export const ItcOrderList = (token) => {
-  // 矿机订单itc
+export const WithdrawList = () => {
+  // 算力订单--续费订单(出纳/会计)确认
   return request({
-    url: 'ItcOrderList',
-    method: 'post',
-    data: {
-      token: token
-    }
+    url: 'withdraw_list',
+    method: 'post'
   })
 }
 
-export const ItcOrderEdit = (token, id) => {
-  // 矿机订单itc
+export const WithdrawStatus = (token, id) => {
+  // 算力订单--续费订单(出纳/会计)确认
   return request({
-    url: 'ItcOrderEdit',
+    url: 'withdraw_status',
     method: 'post',
     data: {
       token: token,
@@ -990,27 +987,14 @@ export const ItcOrderEdit = (token, id) => {
   })
 }
 
-export const ItcOrderCancle = (token, id) => {
-  // 取消矿机订单
+export const WithdrawRefuse = (token, id) => {
+  // 算力订单--续费订单(出纳/会计)确认
   return request({
-    url: 'ItcOrderCancle',
+    url: 'withdraw_refuse',
     method: 'post',
     data: {
       token: token,
       id: id
-    }
-  })
-}
-
-export const ItcOrderSetTrackingNum = (token, id, tracking_number) => {
-  // 设置运单号
-  return request({
-    url: 'ItcOrderSetTrackingNum',
-    method: 'post',
-    data: {
-      token: token,
-      id: id,
-      tracking_number: tracking_number
     }
   })
 }

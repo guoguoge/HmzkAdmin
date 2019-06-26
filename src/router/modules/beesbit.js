@@ -102,15 +102,6 @@ export const statusRouter = {
         icon: 'star'
       },
       hidden: true
-    },
-    {
-      path: 'millorder',
-      component: () => import('@/views/A_beesbit/status/millorder'), // Parent router-view
-      name: 'millorder',
-      meta: {
-        title: 'millorder',
-        icon: 'star'
-      }
     }
   ]
 }

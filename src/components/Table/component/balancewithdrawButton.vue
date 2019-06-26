@@ -2,31 +2,30 @@
 <div>
 
   <el-popover
-    v-if="params.data.cwcode == 1 || params.data.status == 1"
+  v-if="params.data.status == 1"
     placement="top-start"
-    :title="params.data.cwcode == 1?'确认会计确认?':'确认出纳确认?'"
+    title="确认提现申请"
     width="180"
     trigger="click"
     v-model="visible"
   >
     <div style="text-align: right; margin: 0">
       <el-button size="mini" type="text" @click= "visible = false">取消</el-button>
-
-      <el-button type="primary" size="mini" @click="father.financChack(params.data,params.rowIndex)">确定</el-button>
+      <el-button type="primary" size="mini" @click="father.operationEdit(params.data,params.rowIndex)">确定</el-button>
     </div>
     <el-button
       slot="reference"
       size="mini"
       type="primary"
       @click="visible = true">
-      {{params.data.cwcode == 1?'会计确认':'出纳确认'}}
+      同意提现
     </el-button>
   </el-popover>
 
   <el-popover
-    v-if="params.data.cwcode == 1"
+  v-if="params.data.status == 1"
     placement="top-start"
-    title="确定删除?"
+    title="确定拒绝?"
     width="180"
     trigger="click"
     v-model="visible2"
@@ -43,12 +42,12 @@
       size="mini"
       type="danger"
       @click="visible2 = true">
-      删除订单
+      拒绝申请
     </el-button>
   </el-popover>
 
-  <el-tag type="success" v-if="params.data.cwcode == 2 && params.data.status == 2">
-   余额已提现
+  <el-tag type="success" v-if="params.data.status != 1">
+   {{params.data.status == 1 ? '未处理' : params.data.status == 2 ? '已到账' : '已被拒绝'}}
   </el-tag>
 </div>
 </template>
